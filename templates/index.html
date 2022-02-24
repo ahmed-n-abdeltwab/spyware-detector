@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anti-Spyware</title>
+</head>
+<body>
+    <form action = "http://localhost:5000/spyware" method = "post" enctype = "multipart/form-data">
+        <input type = "file" name = "file" />
+        <input type = "submit"/>
+     </form>
+    {% if repport %}
+        <p>{{ repport | safe}}</p>
+    {% endif %}
+</body>
+</html>

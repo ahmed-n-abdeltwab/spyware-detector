@@ -31,3 +31,8 @@ You can also follow my GitHub Profile to stay updated about my latest projects:
 [![GitHub Follow](https://img.shields.io/badge/Follow-Ahmed-lightgrey?style=social&logo=github)](https://github.com/Ahmed-nd)
 
 If you liked the repo then kindly support it by giving it a star ⭐!
+
+## License
+
+Copyright (c) 2022 Ahmed N.
+

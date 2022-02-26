@@ -44,5 +44,5 @@ If you liked the repo then kindly support it by giving it a star ⭐!
 
 ## License
 
-Copyright (c) Ahmed N. 2022 
+Copyright (c) 2022 Ahmed N.
 

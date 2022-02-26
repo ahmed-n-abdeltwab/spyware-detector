@@ -21,6 +21,7 @@ python server.py
 * werkzeug v2.0.3
 * joblib 
 * numpy
+* pefile
 
 ## Gallery
 

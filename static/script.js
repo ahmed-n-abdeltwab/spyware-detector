@@ -1,4 +1,4 @@
-function checkImageFile() {
+function checkFile() {
     document.querySelector('#fileInputButton').submit();
     console.log( document.querySelector('#fileInputButton'))
 }
@@ -18,7 +18,7 @@ document.onpaste = function(event){
 		}else{
 			fileInput = document.getElementById("fileInput");
 			fileInput.files = clipboardData.files;
-			checkImageFile(fileInput);
+			checkFile(fileInput);
 		}
 	}
 }
@@ -40,7 +40,7 @@ document.ondrop = function(event){
 		}else{
 			fileInput = document.getElementById("fileInput");
 			fileInput.files = event.dataTransfer.files;
-			checkImageFile(fileInput);
+			checkFile(fileInput);
 		}
 	}
 }

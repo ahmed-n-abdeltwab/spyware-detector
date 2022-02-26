@@ -1,5 +1,7 @@
 <h1 align="center">Spyware Detector</h1><p align="center">It's a Spyware Detector Website <b>Powered by Machine Learning</b> <br></p>
 
+![Banner](readme_images/banner.png)
+
 ![python](https://img.shields.io/badge/python-3.10.2-brightgreen?style=flat-square&logo=python)
 [![GitHub forks](https://img.shields.io/github/forks/Ahmed-nd/spyware-detector?style=social)](https://github.com/Ahmed-nd/spyware-detector/fork)
 
@@ -19,6 +21,14 @@ python server.py
 * werkzeug v2.0.3
 * joblib 
 * numpy
+
+## Gallery
+
+|  Screenshots    |
+|:----:|
+| ![Pages 1](readme_images/img1.png) |
+| ![Pages 2](readme_images/img2.png) |
+| ![Pages 3](readme_images/img3.png) |
 
 ## Author
 

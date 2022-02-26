@@ -1,18 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <title>Anti-Spyware</title>
 </head>
+
 <body>
-    <form action = "http://localhost:5000/spyware" method = "post" enctype = "multipart/form-data">
-        <input type = "file" name = "file" />
-        <input type = "submit"/>
-     </form>
-    {% if repport %}
-        <p>{{ repport | safe}}</p>
-    {% endif %}
+    <div id="grid">
+        <div class="main">
+            <div id="logoContainer"><a href="http://localhost:5000/"><h1>Anti-Spyware</a></h1></div>
+            
+            <div id="filePreview">
+                {% if predict %}
+                    {% if predict == -1 %}
+                        <p>The Predicted file is <span style='color:green;font-weight: bold;'>not a Spyware</span></p>
+                    {% else %}
+                    <p>The Predicted file is <span style='color:red;font-weight: bold;'>a Spyware</span></p>
+                    {% endif %}
+                    <br>
+                    <p>The Spayware Probapilty is {{ spaywareProbapilty[0] * 100|round(2, 'floor') }}% Not a spayware and 
+                        {{ spaywareProbapilty[1] * 100|round(2, 'floor') }}% is a Spayware</p>
+                {% else %}
+                    <h5>Browse, Drop, or Ctrl+V to Paste a File~</h5>
+                {% endif %}
+            </div>
+            
+            <form id="fileInputButton" action="http://localhost:5000/spyware" method="post"
+                enctype="multipart/form-data">
+                <div id="fileRowContainer">
+                    <input id="fileInput" onchange="checkImageFile();" type="file" name="file"
+                    title="Browse to select an file to scan" accept=".exe" />
+                <span id="fileInputLabel">Select File</span>
+                </div>
+            </form>
+            
+        </div>
+        <div id="spacer">
+        </div>
+        <footer>
+            <p>Copyright © Ahmed N. 2022. All Rights Reserved</p>
+        </footer>
+
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
+
 </html>

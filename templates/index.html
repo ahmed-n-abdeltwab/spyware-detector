@@ -17,13 +17,13 @@
             <div id="filePreview">
                 {% if predict %}
                     {% if predict == -1 %}
-                        <p>The Predicted file is <span style='color:green;font-weight: bold;'>not a Spyware</span></p>
+                    <p>The Predicted file is <span style='color:red;font-weight: bold;'>a Spyware</span></p>    
                     {% else %}
-                    <p>The Predicted file is <span style='color:red;font-weight: bold;'>a Spyware</span></p>
+                    <p>The Predicted file is <span style='color:green;font-weight: bold;'>not a Spyware</span></p>
                     {% endif %}
                     <br>
-                    <p>The Spayware Probapilty is {{ spaywareProbapilty[0] * 100|round(2, 'floor') }}% Not a spayware and 
-                        {{ spaywareProbapilty[1] * 100|round(2, 'floor') }}% is a Spayware</p>
+                    <p>The Spayware Probapilty is {{ spaywareProbapilty[1] * 100|round(2, 'floor') }}% Not a spayware and 
+                        {{ spaywareProbapilty[0] * 100|round(2, 'floor') }}% is a Spayware</p>
                 {% else %}
                     <h5>Browse, Drop, or Ctrl+V to Paste a File~</h5>
                 {% endif %}

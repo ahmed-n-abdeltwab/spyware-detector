@@ -21,6 +21,7 @@ python server.py
 * werkzeug v2.0.3
 * joblib 
 * numpy
+* pefile
 
 ## Gallery
 
@@ -32,7 +33,9 @@ python server.py
 
 ## Author
 
-#### Ahmed Nasser
+* #### Ahmed Nasser
+* #### Mahmoud Soliman
+
 
 [![Linkedin Connect](https://img.shields.io/badge/Connect-Ahmed-lightgrey?style=social&logo=linkedin)](https://www.linkedin.com/in/ahmed-nasser-94a765171/)
 
@@ -40,7 +43,9 @@ You can also follow my GitHub Profile to stay updated about my latest projects:
 
 [![GitHub Follow](https://img.shields.io/badge/Follow-Ahmed-lightgrey?style=social&logo=github)](https://github.com/Ahmed-nd)
 
+
 If you liked the repo then kindly support it by giving it a star ⭐!
+
 
 ## License
 

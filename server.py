@@ -3,9 +3,8 @@ from werkzeug.utils import secure_filename
 import os
 import joblib
 import numpy as np
-import re
-import pefile
-import csv
+from scanFile import scanFile
+import time
 
 PathOfTheDataSet = './dataSets/StaticMalwareMatrixVersion2.csv'
 RANDOM_FOREST_CLASSIFIER_PL_MODEL_FN = './models/StaticMalwareMatrix_RFC_PL'
@@ -33,13 +32,16 @@ def spyware():
             app.config['UPLOAD_FOLDER'], secure_filename(f.filename))
         f.save(filePath)
 
-        sample = scanFile(filePath, PathOfTheDataSet)
-      #   delete_item(filePath)
+        sample = scanFile(PathOfTheDataSet, filePath)
+        
+        # time.sleep(5) 
+        # delete_item(filePath)
         return classification(sample)
 
 
 def delete_item(path):
-    print("delete_item")
+    print(f"deleted {path}")
+    os.unlink(path)
     os.remove(path)
 
 
@@ -62,44 +64,6 @@ def samplePreprocessor(oldSample, support):
         if support[i]:
             sample.append(oldSample[i])
     return sample
-
-
-def scanFile(current_file,PATHOfTheDataSet):
-    
-    URL_list =[]
-    IP_list =[]
-    API_list =[]
-
-
-    with open(current_file, encoding="latin-1") as f:
-        for line in f:
-        
-            urls = re.findall('https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+',line)
-            ips = re.findall('(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})',line)
-        
-            if len(ips) > 0:
-                IP_list.append(str(ips)[2:len(str(ips))-2].lower())
-            
-            if len(urls) > 0:
-                URL_list.append(str(urls)[2:len(str(urls))-2].lower())
-
-        pe = pefile.PE(current_file)
-        for entry in pe.DIRECTORY_ENTRY_IMPORT:
-            for API in entry.imports:
-                API_list.append(str(API.name)[2:len(str(API.name))-1].lower())
-            
-            
-        finalListOfTheFile=IP_list+URL_list+API_list
-    
-    fi = open(PathOfTheDataSet, newline='')
-    csv_reader = csv.reader(fi)
-    featuresOfTheDataSet=next(csv_reader)[1:]
-    
-    ret_list=[]
-    for f in featuresOfTheDataSet:
-        ret_list.append(finalListOfTheFile.count(f.lower()))
-        
-    return ret_list
 
 
 if __name__ == '__main__':

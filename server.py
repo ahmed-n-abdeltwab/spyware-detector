@@ -33,15 +33,13 @@ def spyware():
         f.save(filePath)
 
         sample = scanFile(PathOfTheDataSet, filePath)
-        
+        f.close()
         # time.sleep(5) 
         # delete_item(filePath)
         return classification(sample)
 
 
 def delete_item(path):
-    print(f"deleted {path}")
-    os.unlink(path)
     os.remove(path)
 
 

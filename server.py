@@ -27,20 +27,12 @@ def index():
 def spyware():
     if request.method == 'POST':
         f = request.files['file']
-        print(type(f))
-        filePath = os.path.join(
-            app.config['UPLOAD_FOLDER'], secure_filename(f.filename))
-        f.save(filePath)
-
-        sample = scanFile(PathOfTheDataSet, filePath)
+        fileName = f.filename
+        sample = scanFile(PathOfTheDataSet, f)
         f.close()
-        # time.sleep(5) 
-        # delete_item(filePath)
-        return classification(sample)
-
-
-def delete_item(path):
-    os.remove(path)
+        predict, probapilty = classification(sample)
+        return render_template('index.html', predict=predict, spaywareProbapilty=probapilty,
+                               fileName=fileName)
 
 
 def classification(oldSample):
@@ -51,9 +43,7 @@ def classification(oldSample):
     model = joblib.load(LOGISTIC_REGRESSION_MODEL_FN)
     pred = model.predict(X_new)
     pred_pro = model.predict_proba(X_new)
-    # The model returns an array of predictions - one for each set of features submitted
-    # In our case, we only submitted one patient, so our prediction is the first one in the resulting array.
-    return render_template('index.html', predict=pred[0], spaywareProbapilty=pred_pro[0])
+    return pred[0], pred_pro[0]
 
 
 def samplePreprocessor(oldSample, support):

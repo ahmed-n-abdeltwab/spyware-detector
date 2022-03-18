@@ -29,20 +29,24 @@ def scanFile(PathOfTheDataSet,current_file):
     URL_list =[]
     IP_list =[]
     API_list =[]
-            
-    with open(current_file, encoding="latin-1") as f:
-        for line in f:
-            
-            urls = re.findall('https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+',line)
-            ips = re.findall('(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})',line)
-           
-            if len(ips) > 0:
-                IP_list.append(str(ips)[2:len(str(ips))-2])
-                
-            if len(urls) > 0:
-                URL_list.append(str(urls)[2:len(str(urls))-2])
 
-    pe = pefile.PE(current_file)
+    f = str(current_file.read(),'latin-1').split()
+    print(f)
+    # current_file = current_file.encode('latin-1')
+    for line in f:
+        
+        urls = re.findall('https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+',line)
+        ips = re.findall('(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})',line)
+        
+        if len(ips) > 0:
+            IP_list.append(str(ips)[2:len(str(ips))-2])
+            
+        if len(urls) > 0:
+            URL_list.append(str(urls)[2:len(str(urls))-2])
+
+    pe_data = mmap.mmap(current_file.fileno(), 0, access=mmap.ACCESS_READ)
+
+    pe = pefile.PE(data=pe_data)
     for entry in pe.DIRECTORY_ENTRY_IMPORT:
         for API in entry.imports:
             API_list.append(str(API.name)[2:len(str(API.name))-1])
@@ -63,12 +67,13 @@ def scanFile(PathOfTheDataSet,current_file):
     fi = open(PathOfTheDataSet, newline='')
     csv_reader = csv.reader(fi)
     featuresOfTheDataSet=next(csv_reader)[1:]
-
+    fi.close()
+    
     ret_list=[]
 
     for f in featuresOfTheDataSet:
         ret_list.append(readMultiple("Good.txt",f))
-
+    
     return ret_list
 ##########################################################
 

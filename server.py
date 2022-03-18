@@ -12,10 +12,9 @@ RANDOM_FOREST_CLASSIFIER_MODEL_FN = './models/StaticMalwareMatrix_RFC'
 LOGISTIC_REGRESSION_PL_MODEL_FN = './models/StaticMalwareMatrix_LR_PL'
 LOGISTIC_REGRESSION_MODEL_FN = './models/StaticMalwareMatrix_LR'
 SUPPORT_FN = './static/support.json'
-UPLOAD_FOLDER = '.\\static\\uploads'
+
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 @app.route('/')

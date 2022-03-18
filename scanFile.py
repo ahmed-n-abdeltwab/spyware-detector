@@ -31,8 +31,6 @@ def scanFile(PathOfTheDataSet,current_file):
     API_list =[]
 
     f = str(current_file.read(),'latin-1').split()
-    print(f)
-    # current_file = current_file.encode('latin-1')
     for line in f:
         
         urls = re.findall('https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+',line)

@@ -1,7 +1,7 @@
 import re
 import pefile
 import csv
-
+import mmap
 ##########################################################
 ################### readMultiple function retured the count of 'searchString' in the file 'logfile'
 def readMultiple(logfile,searchString):

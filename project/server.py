@@ -6,12 +6,14 @@ import numpy as np
 from scanFile import scanFile
 import time
 
-PathOfTheDataSet = './dataSets/StaticMalwareMatrixVersion2.csv'
+current_file = os.path.abspath(os.path.dirname(__file__))
+PathOfTheDataSet = os.path.join(current_file, '../datasets/malwares.csv')
+
 RANDOM_FOREST_CLASSIFIER_PL_MODEL_FN = './models/StaticMalwareMatrix_RFC_PL'
 RANDOM_FOREST_CLASSIFIER_MODEL_FN = './models/StaticMalwareMatrix_RFC'
 LOGISTIC_REGRESSION_PL_MODEL_FN = './models/StaticMalwareMatrix_LR_PL'
-LOGISTIC_REGRESSION_MODEL_FN = './models/StaticMalwareMatrix_LR'
-SUPPORT_FN = './static/support.json'
+LOGISTIC_REGRESSION_MODEL_FN = os.path.join(current_file, './models/StaticMalwareMatrix_LR')
+SUPPORT_FN = os.path.join(current_file, './static/support.json')
 
 
 app = Flask(__name__)

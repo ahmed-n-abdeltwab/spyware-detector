@@ -1,8 +1,10 @@
 from sklearn.model_selection import train_test_split
 import pandas as pd
 import random
+import os
 
-DATA_FN = 'dataSets/StaticMalwareMatrixVersion2.csv'
+current_file = os.path.abspath(os.path.dirname(__file__))
+DATA_FN = os.path.join(current_file, '../datasets/malwares.csv')
 
 def makeTerrainData(n = 0.3):
     malwares = pd.read_csv(DATA_FN)

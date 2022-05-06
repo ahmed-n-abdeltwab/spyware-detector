@@ -14,5 +14,3 @@ def makeTerrainData(n = 0.3):
     X, y = malwares[features].values, malwares[label].values
     # Split data 70%-30% into training set and test set (X_train, X_test, y_train, y_test)
     return train_test_split(X, y, test_size=n, random_state=0)
-
-print(malwares.describe())

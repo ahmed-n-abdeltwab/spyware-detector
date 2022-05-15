@@ -36,7 +36,7 @@ python server.py
 * #### Ahmed Nasser Abdeltawab
 * #### Mahmoud Soliman
 * #### Ahmed Methat
-* #### Abdo alrhman
+* #### Abdelrahman Morsy
 * #### Ahmed Nasser Nabil
 * #### Ahmed Moamer
 

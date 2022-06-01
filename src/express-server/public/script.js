@@ -21,7 +21,7 @@ fileInput.addEventListener('change', async (e) => {
 
   const h5prediction = document.createElement('h5');
   h5prediction.innerHTML = ` The file : [${fileInput.files[0].name}] is 
-  ${prediction == 1 ? malware: notMalware}`;
+  ${prediction == -1 ? malware: notMalware}`;
 
   const h4Top10reason = document.createElement('h4');
   h4Top10reason.textContent = 'Top 10 reasons:'

@@ -1,4 +1,6 @@
 datasets
+models
 Untitled.ipynb
-UMLs
-Good.txt
+UMLs/
+project/Good.txt
+project/models/*

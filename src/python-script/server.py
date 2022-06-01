@@ -27,17 +27,10 @@ def scanner():
         features = scanner(PathOfTheDataSet, file)
         return features
 
-@app.route('/api/v1/scanner', methods=['POST', 'GET'])
-def scanner():
-    if request.method == 'POST':
-        file = json.loads((request.data).decode())['data']
-        features = scanner(PathOfTheDataSet, file)
-        return features
-
 @app.route('/api/v1/classifer', methods=['POST', 'GET'])
 def classifer():
     if request.method == 'POST':
-        ...
+        features = json.loads((request.data).decode())
 
 # {
 #         prediction:1,

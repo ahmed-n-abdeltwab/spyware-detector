@@ -3,8 +3,8 @@ from werkzeug.utils import secure_filename
 import os
 import joblib
 import numpy as np
-from scanner import scanner
-from classifier import classifier
+from scanner import Scanner
+from classifier import Classifier
 import time
 import json
 import requests
@@ -17,21 +17,21 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return '<h1>Hello World! From scanner server</h1>'
+    return '<h1>Hello World! From python server</h1>'
 
 
 @app.route('/api/v1/scanner', methods=['POST', 'GET'])
 def scanner():
     if request.method == 'POST':
-        file = json.loads((request.data).decode())['data']
-        features = scanner(PathOfTheDataSet, file)
+        features = Scanner(PathOfTheDataSet, request.data)
         return features
 
 @app.route('/api/v1/classifier', methods=['POST', 'GET'])
 def classifier():
     if request.method == 'POST':
-        features = json.loads((request.data).decode())['features']
-        # prediction = classifier(features)
+        features = json.loads((request.data).decode())
+        print(features)
+        # prediction = Classifier(features)
         prediction = -1
         return {'prediction':prediction,'details':{'prob':[0.5, 0.5], 'top10reason':["reason1", "reason2","reason3"]}}
 

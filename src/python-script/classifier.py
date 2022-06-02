@@ -1,2 +1,2 @@
-def classifier(features):
+def Classifier(features):
     ...

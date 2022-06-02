@@ -32,7 +32,7 @@ def Scanner(PathOfTheDataSet,current_file):
     URL_list =[]
     IP_list =[]
     API_list =[]
-    with open("tmp", "w+b") as file:
+    with open("tmp", "a+b") as file:
         file.write(current_file)
         f = file.read().decode('latin-1').split()
         for line in f:

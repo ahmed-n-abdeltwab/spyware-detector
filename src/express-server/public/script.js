@@ -5,44 +5,51 @@ const result = document.querySelector("#result");
 // spans for malwares and not malwares
 const malware = "<span style='color:red;font-weight: bold;'>a Spyware</span>";
 const notMalware =
-  " <span style='color:red;font-weight: bold;'>not a Spyware</span>";
+  "<span style='color:red;font-weight: bold;'>not a Spyware</span>";
 
-fileInput.addEventListener("change", async (e) => {
-  e.preventDefault();
-  const formData = new FormData(fileForm);
-  // formData.append(fileInput.files[0].name, fileInput.files[0]);
-  await axios
-    .post("http://127.0.0.1:3000/uploud", {
-      body: formData,
-    })
-    .then(response => response.data)
-    .then(({ prediction, details }) => {
-      result.textContent = "";
+// fileInput.addEventListener("change", async (e) => {
+//   e.preventDefault();
+//   // const formData = new FormData(fileForm);
+//   // formData.append(fileInput.files[0].name, fileInput.files[0]);
+//   await axios
+//     .post("http://127.0.0.1:3000/uploud", {
+//       headers: { 
+//         'Content-Type': 'multipart/form-data',
+//         fieldName: "uploaded_file",
+//       },
+      
+//       data : fileInput.files[0]
+//     })
+//     .then(response => {response.data})
+//     .then(({ prediction, details }) => {
+//       result.textContent = "";
 
-      const h3Prediction = document.createElement("h3");
-      h3Prediction.textContent = "Prediction :";
+//       const h3Prediction = document.createElement("h3");
+//       h3Prediction.textContent = "Prediction :";
 
-      const h5prediction = document.createElement("h5");
-      h5prediction.innerHTML = ` The file : [${fileInput.files[0].name}] is 
-  ${prediction == -1 ? malware : notMalware}`;
+//       const h5prediction = document.createElement("h5");
+//       h5prediction.innerHTML = ` The file : [${fileInput.files[0].name}] is 
+//   ${prediction == -1 ? malware : notMalware}`;
 
-      const h4Top10reason = document.createElement("h4");
-      h4Top10reason.textContent = "Top 10 reasons:";
+//       const h4Top10reason = document.createElement("h4");
+//       h4Top10reason.textContent = "Top 10 reasons:";
 
-      const olTop10reason = document.createElement("ol");
-      details.top10reason.forEach((element) => {
-        const li = document.createElement("li");
-        li.textContent = element;
-        olTop10reason.appendChild(li);
-      });
-      result.appendChild(h3Prediction);
-      result.appendChild(h5prediction);
-      result.appendChild(h4Top10reason);
-      result.appendChild(olTop10reason);
-    })
-    .catch(err => console.log(err));
-});
-
+//       const olTop10reason = document.createElement("ol");
+//       details.top10reason.forEach((element) => {
+//         const li = document.createElement("li");
+//         li.textContent = element;
+//         olTop10reason.appendChild(li);
+//       });
+//       result.appendChild(h3Prediction);
+//       result.appendChild(h5prediction);
+//       result.appendChild(h4Top10reason);
+//       result.appendChild(olTop10reason);
+//     })
+//     .catch(err => console.log(err));
+// });
+function run(e) {
+  fileForm.submit()
+}
 document.onpaste = function (event) {
   urlInput = document.getElementById("urlInput");
   if (event.target == urlInput) {

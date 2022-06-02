@@ -23,13 +23,15 @@ def index():
 @app.route('/api/v1/scanner', methods=['POST', 'GET'])
 def scanner():
     if request.method == 'POST':
-        features = Scanner(PathOfTheDataSet, request.data)
+        print(request.file)
+        features = Scanner(PathOfTheDataSet, request.file)
+        print(features)
         return features
 
 @app.route('/api/v1/classifier', methods=['POST', 'GET'])
 def classifier():
     if request.method == 'POST':
-        features = json.loads((request.data).decode())
+        features = request.features
         print(features)
         # prediction = Classifier(features)
         prediction = -1

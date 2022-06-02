@@ -20,21 +20,22 @@ app.get('/', (req, res) => {
 
 app.post('/uploud', multer().single('uploaded_file'), async (req, res) => {
     // fetch the features from the scanner
-    console.log(req.file, req.body)
-    const fileFeatures = await axios.post('http://127.0.0.1:6000/api/v1/scanner', {
-        'data':req.file
+    // console.log(req.file, req)
+    let fileFeatures;
+    await axios.post('http://127.0.0.1:6000/api/v1/scanner', {
+        'file':req.file
     })
-    .then(res => { return res.data })
-    .catch(error => console.log("error", "error [fileFeatures]"))
-
+    .then(res => {fileFeatures = res })
+    .catch(error => {return res.status(400).send(JSON.parse(error))});
+    console.log(fileFeatures)
     // fetch the features from the classifier
-    const prediction = await axios.post('http://127.0.0.1:6000/api/v1/classifier', {
-        'features':fileFeatures
-    })
-    .then(res => { return res.data })
-    .catch(error => console.log("error", "error [prediction]"))
+    let prediction;
+    await axios.post(
+        'http://127.0.0.1:6000/api/v1/classifier', fileFeatures)
+    .then(res => { prediction = res.data })
+    .catch(error => {return res.status(400).send(JSON.parse(error))});
 
-    res.json(prediction)
+    res.json(prediction);
 })
 app.listen(port, hostname,  () => {
     console.log(`Example app listening on http://${hostname}:${port}/`)

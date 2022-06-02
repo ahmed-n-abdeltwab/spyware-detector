@@ -21,10 +21,10 @@
                 <h5>Browse, Drop, or Ctrl+V to Paste a File~</h5>
             </div>
 
-            <form id="fileForm" enctype="multipart/form-data" method="post">
+            <form id="fileForm" action="/uploud" enctype="multipart/form-data" method="post">
                 <div id="fileRowContainer">
                     <input id="fileInput" type="file" name="uploaded_file"
-                        title="Browse to select an file to scan" />
+                        title="Browse to select an file to scan" onchange="run()"/>
                     <span id="fileInputLabel">Select File</span>
                 </div>
             </form>

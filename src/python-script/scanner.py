@@ -28,13 +28,13 @@ def readMultiple(logfile,searchString):
 ##########################################################
 ########### scanFile function retured a file that contain the APIs ,IPs and URLs in the file 'current_file'
 def Scanner(PathOfTheDataSet,current_file):
-
     URL_list =[]
     IP_list =[]
     API_list =[]
-    with open("tmp", "a+b") as file:
+    # current_file = bytes(current_file)
+    with open("tmp", "w+", encoding="utf-8") as file:
         file.write(current_file)
-        f = file.read().decode('latin-1').split()
+        f = file.read().encode('latin-1').split()
         for line in f:
             
             urls = re.findall('https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+',line)
@@ -45,16 +45,14 @@ def Scanner(PathOfTheDataSet,current_file):
                 
             if len(urls) > 0:
                 URL_list.append(str(urls)[2:len(str(urls))-2])
-
         pe_data = mmap.mmap(file.fileno(), 0, access=mmap.ACCESS_READ)
-
         pe = pefile.PE(data=pe_data)
+        pe_data.close()
         for entry in pe.DIRECTORY_ENTRY_IMPORT:
             for API in entry.imports:
                 API_list.append(str(API.name)[2:len(str(API.name))-1])
-        pe_data.close()
-        with open("Good.txt", "w+") as textfile:
         
+        with open("Good.txt", "w+") as textfile:
             for element in URL_list:
                 textfile.write(str(element).lower() + "\n")
                 

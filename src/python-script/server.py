@@ -31,8 +31,8 @@ def scanner():
 @app.route('/api/v1/classifier', methods=['POST', 'GET'])
 def classifier():
     if request.method == 'POST':
-        features = request.features
-        print(features)
+        # features = request.features
+        # print(features)
         # prediction = Classifier(features)
         prediction = -1
         return {'prediction':prediction,'details':{'prob':[0.5, 0.5], 'top10reason':["reason1", "reason2","reason3"]}}

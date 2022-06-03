@@ -11,7 +11,7 @@ Open CMD where you want to clone the project & run the following commands
 
 ```
 git clone https://github.com/Ahmed-nd/spyware-detector.git
-cd spyware-detector
+cd project
 python server.py
 ```
 
@@ -33,8 +33,12 @@ python server.py
 
 ## Author
 
-* #### Ahmed Nasser
+* #### Ahmed Nasser Abdeltawab
 * #### Mahmoud Soliman
+* #### Ahmed Methat
+* #### Abdelrahman Morsy
+* #### Ahmed Nasser Nabil
+* #### Ahmed Moamer
 
 
 [![Linkedin Connect](https://img.shields.io/badge/Connect-Ahmed-lightgrey?style=social&logo=linkedin)](https://www.linkedin.com/in/ahmed-nasser-94a765171/)

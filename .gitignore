@@ -1,6 +1,6 @@
 datasets
+__pycache__
 models
 Untitled.ipynb
-UMLs/
-project/Good.txt
-project/models/*
+UMLs
+# project/models/*

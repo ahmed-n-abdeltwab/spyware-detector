@@ -26,11 +26,9 @@ def scanner():
     if request.method == 'POST':
         try:
             file = request.files['file']
-            print(file)
             fileName = file.filename
             features = Scanner(PathOfTheDataSet, file)
             file.close()
-            print(features)
             return features, 200
         except Exception as e:
             traceback.print_exc()
@@ -42,7 +40,7 @@ def classifier():
     if request.method == 'POST':
         features = request.get_json(force=True)
         prediction = Classifier(features)
-        # return {'prediction':prediction,'details':{'prob':[0.5, 0.5], 'top10reason':["reason1", "reason2","reason3"]}}, 200
+        print(prediction)
         return prediction, 200
 
 

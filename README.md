@@ -3,7 +3,7 @@
 ![Banner](readme_images/banner.png)
 
 ![python](https://img.shields.io/badge/python-3.10.2-brightgreen?style=flat-square&logo=python)
-[![GitHub forks](https://img.shields.io/github/forks/Ahmed-nd/spyware-detector?style=social)](https://github.com/Ahmed-nd/spyware-detector/fork)
+[![GitHub forks](https://img.shields.io/github/forks/ahmednss/spyware-detector?style=social)](https://github.com/ahmednss/spyware-detector/fork)
 
 ## Installation Steps
 
@@ -45,7 +45,7 @@ python server.py
 
 You can also follow my GitHub Profile to stay updated about my latest projects:
 
-[![GitHub Follow](https://img.shields.io/badge/Follow-Ahmed-lightgrey?style=social&logo=github)](https://github.com/Ahmed-nd)
+[![GitHub Follow](https://img.shields.io/badge/Follow-Ahmed-lightgrey?style=social&logo=github)](https://github.com/ahmednss)
 
 
 If you liked the repo then kindly support it by giving it a star ⭐!

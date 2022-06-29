@@ -11,17 +11,12 @@ Open CMD where you want to clone the project & run the following commands
 
 ```
 git clone https://github.com/Ahmed-nd/spyware-detector.git
-cd src/python-script
+
+cd src/python-script/
+pip install -r requirements.txt
 python server.py
 ```
 
-## Python Packages
-
-* flask v2.0.3
-* werkzeug v2.0.3
-* joblib 
-* numpy
-* pefile
 
 ## Gallery
 
@@ -33,7 +28,8 @@ python server.py
 
 ## Author
 
-* #### Ahmed Nasser Abdeltawab
+
+* #### Ahmed Nasser 
 * #### Mahmoud Soliman
 * #### Ahmed Methat
 * #### Abdelrahman Morsy

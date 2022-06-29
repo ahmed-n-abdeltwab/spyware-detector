@@ -18,17 +18,20 @@ def Classifier(scannerResult):
     prediction = int(model.predict([features])[0])
     pred_pro = list(model.predict_proba([features])[0])
     if prediction == -1 :
-        return {"prediction": prediction, "details": {"prob": pred_pro, "topReason": API_list}}
+        return {"prediction": prediction, "details": {"prob": pred_pro, "topReason": topReason(API_list)}}
     return {"prediction": prediction, "details": {"prob": pred_pro}}
 
 
-def topReason():
+def topReason(API_list):
     import pandas as pd
 
     df = pd.read_html('https://malapi.io/', attrs = {'id': 'main-table'})
-    malapiSpyingList = (df[0]['Spying'][0]).split()
-    malapiSpyingLower = list(map(lambda x: x.lower(), malapiSpying))
+    Spying = (df[0]['Spying'][0]).split()
+    Evasion = (df[0]['Evasion'][0]).split() 
+    malapiList = Lower(Spying + Evasion)
+    API_list = Lower(API_list)
 
-    malwares = pd.read_csv('../datasets/malwares.csv')
-    malapiSpyingUsed = list(filter(lambda key: key in malapiSpyingLower , malwares.keys()))
+    return list(filter(lambda api: api in API_list , malapiList))
 
+def Lower(l:list):
+    return list(map(lambda x: x.lower(), l))

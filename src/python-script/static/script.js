@@ -53,7 +53,7 @@ ${prediction === -1 ? malware : notMalware}`;
 
 const printReasons = (topReason) => {
   const h4TopReason = document.createElement("h4");
-  h4TopReason.textContent = "Top Reasons:";
+  h4TopReason.textContent = "The used APIs:";
 
   const olTopreason = document.createElement("ol");
   topReason.forEach((element) => {

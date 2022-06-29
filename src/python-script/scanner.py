@@ -49,7 +49,9 @@ def Scanner(PathOfTheDataSet,current_file):
     for entry in pe.DIRECTORY_ENTRY_IMPORT:
         for API in entry.imports:
             API_list.append(str(API.name)[2:len(str(API.name))-1])
-    pe_data.close()        
+    pe_data.close()      
+
+    
     textfile = open("Good.txt", "w")
     
     for element in URL_list:
@@ -74,7 +76,7 @@ def Scanner(PathOfTheDataSet,current_file):
         ret_list.append(readMultiple("Good.txt",f))
     
     os.remove("Good.txt")
-    return {'features' : ret_list, 'size': len(ret_list)}
+    return {'features' : ret_list, 'API_list': API_list}
 ##########################################################
 
 

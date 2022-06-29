@@ -1,12 +1,7 @@
-from flask import Flask,flash, render_template, request, redirect, url_for
-from werkzeug.utils import secure_filename
-from flask import json
+from flask import Flask, render_template, request
 import os
-
 from scanner import Scanner
 from classifier import Classifier
-import time
-import requests
 import traceback
 current_file = os.path.abspath(os.path.dirname(__file__))
 PathOfTheDataSet = os.path.join(current_file, '../datasets/malwares.csv')

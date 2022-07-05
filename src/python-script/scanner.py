@@ -25,6 +25,8 @@ def readMultiple(logfile, searchString):
 
 
 ##########################################################
+
+
 def calcEntropy(fileData):
     import math
 
@@ -47,7 +49,7 @@ def calcEntropy(fileData):
 
 ##########################################################
 ########### scanFile function retured a file that contain the APIs ,IPs and URLs in the file 'current_file'
-def Scanner(PathOfTheDataSet, current_file):
+def Scanner(current_file):
 
     URL_list = []
     IP_list = []
@@ -60,49 +62,43 @@ def Scanner(PathOfTheDataSet, current_file):
         urls = re.findall("https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+", line)
         ips = re.findall("(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})", line)
 
-        if len(ips) > 0:
-            IP_list.append(str(ips)[2 : len(str(ips)) - 2])
+        if len(ips) > 0:  # extract IPs
+            for ip in ips:
+                ip = ip.replace(".", "_")
+                IP_list.append(str(ip).lower())
 
-        if len(urls) > 0:
-            URL_list.append(str(urls)[2 : len(str(urls)) - 2])
+        if len(urls) > 0:  # extract URLs
+            for url in urls:
+                url = url.replace(".", "_")
+                url = url.replace(":", "_")
+                url = url.replace("/", "_")
+                url = url.replace("-", "_")
+                URL_list.append(str(url).lower())
 
     pe_data = mmap.mmap(current_file.fileno(), 0, access=mmap.ACCESS_READ)
 
-    pe = pefile.PE(data=pe_data)
+    pe = pefile.PE(data=pe_data)  # extract APIs
     for entry in pe.DIRECTORY_ENTRY_IMPORT:
         for API in entry.imports:
-            API_list.append(str(API.name)[2 : len(str(API.name)) - 1])
+            API_list.append(str(API.name)[2 : len(str(API.name)) - 1].lower())
+
+    finalListOfTheFile = IP_list + URL_list + API_list
+
     pe_data.close()
 
-    textfile = open("Good.txt", "w")
+    content = " ".join(finalListOfTheFile)  # convert file to string
 
-    for element in URL_list:
-        textfile.write(str(element).lower() + "\n")
-
-    for element in IP_list:
-        textfile.write(str(element).lower() + "\n")
-
-    for element in API_list:
-        textfile.write(str(element).lower() + "\n")
-    textfile.close()
-
-    ############### read features of the original dataset
-    fi = open(PathOfTheDataSet, newline="")
-    csv_reader = csv.reader(fi)
-    featuresOfTheDataSet = next(csv_reader)[1:]
-    fi.close()
-
-    ret_list = []
-
-    for f in featuresOfTheDataSet:
-        ret_list.append(readMultiple("Good.txt", f))
-
-    os.remove("Good.txt")
+    content.replace(",", " ")
+    content.replace("[", " ")
+    content.replace("]", " ")
+    content.replace('"', " ")
+    print(content)
+    content = readMultiple(logfile, searchString)
 
     hash_sha256 = hashlib.sha256(fileData).hexdigest()
     entropy = calcEntropy(fileData)
     return {
-        "features": ret_list,
+        "features": AllFeatures,
         "details": {
             "API_list": API_list,
             "fileHash": hash_sha256,

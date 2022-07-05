@@ -6,10 +6,14 @@ body {
     padding: 0;
     text-align: center;
 }
-div {
+div  {
     display: block;
 }
-a {
+#logoContainer a {
+    text-decoration: none;
+    color: white;
+}
+#result a {
     text-decoration: none;
     color: white;
 }

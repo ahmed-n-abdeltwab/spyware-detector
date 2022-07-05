@@ -6,25 +6,30 @@ const DOMresult = document.querySelector("#result");
 const malware = "<span style='color:red;font-weight: bold;'>a Spyware</span>";
 const notMalware =
   "<span style='color:green;font-weight: bold;'>Not a Spyware</span>";
+const malapiAPI = "https://malapi.io/winapi/";
+const virustotalAPI = "https://www.virustotal.com/gui/file/";
 
 fileInput.addEventListener("change", async (e) => {
   e.preventDefault();
   // fetch the features from the scanner
   const formData = new FormData(fileForm);
-  const { features, API_list } = await postData(
+  const { features, details: fileDetails } = await postData(
     "http://127.0.0.1:4000/api/v1/scanner",
     formData
   );
+  const { API_list, fileHash, entropy } = fileDetails;
+
   // fetch the prediction from the classifier
-  const { prediction, details } = await postData(
+  const { prediction, details: predDetails } = await postData(
     "http://127.0.0.1:4000/api/v1/classifier",
     [features, API_list]
   );
   const { name } = fileInput.files[0];
-  printPrediction(name, prediction);
-  if ("topReason" in details) {
-    const { topReason } = details;
-    printReasons(topReason);
+
+  printPrediction(name, prediction, fileHash, entropy);
+  if ("topReason" in predDetails) {
+    const { topReason } = predDetails;
+    if (topReason.length > 0) printReasons(topReason);
   }
 });
 
@@ -39,16 +44,28 @@ const postData = async (url, data) => {
   }
 };
 
-const printPrediction = (filename, prediction) => {
+const printPrediction = (filename, prediction, fileHash, entropy) => {
   DOMresult.textContent = "";
   const h3Prediction = document.createElement("h3");
   h3Prediction.textContent = "Prediction :";
 
-  const h5prediction = document.createElement("h5");
-  h5prediction.innerHTML = `The file " ${filename} " is 
+  const pPrediction = document.createElement("p");
+  pPrediction.innerHTML = `The file " ${filename} " is 
 ${prediction === -1 ? malware : notMalware}`;
+  const pFileHash = document.createElement("p");
+  pFileHash.innerHTML =
+    "<a href='" +
+    virustotalAPI +
+    fileHash +
+    "' target='_blank'>Hash : " +
+    fileHash +
+    "</a>";
+  const pEntropy = document.createElement("p");
+  pEntropy.textContent = `The file Entropy : ${entropy}`;
   DOMresult.appendChild(h3Prediction);
-  DOMresult.appendChild(h5prediction);
+  DOMresult.appendChild(pPrediction);
+  DOMresult.appendChild(pFileHash);
+  DOMresult.appendChild(pEntropy);
 };
 
 const printReasons = (topReason) => {
@@ -58,7 +75,13 @@ const printReasons = (topReason) => {
   const olTopreason = document.createElement("ol");
   topReason.forEach((element) => {
     const li = document.createElement("li");
-    li.textContent = element;
+    li.innerHTML =
+      "<a href='" +
+      malapiAPI +
+      element +
+      "' target='_blank'>" +
+      element +
+      "</a>";
     olTopreason.appendChild(li);
   });
   DOMresult.appendChild(h4TopReason);

@@ -3,6 +3,8 @@ import os
 from scanner import Scanner
 from classifier import Classifier
 import traceback
+
+
 current_file = os.path.abspath(os.path.dirname(__file__))
 PathOfTheDataSet = os.path.join(current_file, '../datasets/malwares.csv')
 

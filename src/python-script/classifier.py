@@ -8,12 +8,12 @@ def Classifier(scannerResult):
     # print(features)
     API_list = scannerResult[1]
     # filter the features list 
-    # features = np.array(features)
-    # filter_arr = list(joblib.load("./static/support.json"))
-    # features = features[filter_arr]
+    features = np.array(features)
+    filter_arr = list(joblib.load("./SUPPORT.joblib"))
+    features = features[filter_arr]
 
     # load the model
-    model = joblib.load("./models/LOGISTIC_REGRESSION_MODEL")
+    model = joblib.load("./LOGISTIC_REGRESSION_MODEL.joblib")
 
     # get the prediction
     prediction = int(model.predict([features])[0])

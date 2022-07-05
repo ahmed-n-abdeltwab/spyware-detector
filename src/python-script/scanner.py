@@ -4,23 +4,25 @@ import csv
 import mmap
 import os
 import hashlib
+import pandas as pd
 
+ROOT_PATH = os.path.abspath(os.path.dirname(__file__))
+PathOfTheDataSet = os.path.join(ROOT_PATH, '../datasets/malwares.csv')
 ##########################################################
 ################### readMultiple function retured the count of 'searchString' in the file 'logfile'
 def readMultiple(logfile, searchString):
+    string = logfile.split(' ')
+    count = 0
+    for line in string:
 
-    with open(logfile) as search:
-        count = 0
-        for line in search:
+        # line = line.replace('.', '\n')
+        # line = line.replace(',', '\n')
+        line = line.rstrip()  # remove '\n' at end of line
+        # print "Line", line
 
-            # line = line.replace('.', '\n')
-            # line = line.replace(',', '\n')
-            line = line.rstrip()  # remove '\n' at end of line
-            # print "Line", line
-
-            if searchString in line:
-                # print(line )
-                count += 1
+        if searchString in line:
+            # print(line )
+            count += 1
     return count
 
 
@@ -50,7 +52,7 @@ def calcEntropy(fileData):
 ##########################################################
 ########### scanFile function retured a file that contain the APIs ,IPs and URLs in the file 'current_file'
 def Scanner(current_file):
-
+    global PathOfTheDataSet
     URL_list = []
     IP_list = []
     API_list = []
@@ -93,12 +95,17 @@ def Scanner(current_file):
     content.replace("]", " ")
     content.replace('"', " ")
     print(content)
-    content = readMultiple(logfile, searchString)
+    dataset = pd.read_csv(PathOfTheDataSet)
+
+    features = []
+    for key in dataset.keys()[1:-2]:
+        features.append(readMultiple(content, key))
+    print(features)
 
     hash_sha256 = hashlib.sha256(fileData).hexdigest()
     entropy = calcEntropy(fileData)
     return {
-        "features": AllFeatures,
+        "features": features,
         "details": {
             "API_list": API_list,
             "fileHash": hash_sha256,

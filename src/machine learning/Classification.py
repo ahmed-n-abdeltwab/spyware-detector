@@ -1,16 +1,13 @@
 import joblib
-import matplotlib.pyplot as plt
 
 # filenames
-DATA_FN = 'data/FinalStaticDataSet.csv'
-LOGISTIC_REGRESSION_MODEL = './models/LOGISTIC_REGRESSION_MODEL'
+DATA_FN = './data/FinalStaticDataSet.csv'
+LOGISTIC_REGRESSION_MODEL = './models/LOGISTIC_REGRESSION_MODEL.joblib'
+SUPPORT = './models/SUPPORT.joblib'
 
-def _saveModel( fileName):
+def _save(data, fileName):
     # Save the model as a pickle file
-    joblib.dump(model, fileName)
-
-def _saveStatic( file, fileName):
-    joblib.dump(file, fileName)
+    joblib.dump(data, fileName)
    
 # reading the csv Data file 
 import pandas as pd
@@ -20,23 +17,38 @@ df = pd.read_csv(DATA_FN)
 X = df.iloc[:,1:-1].values
 y = df.iloc[:,0].values
 
-# Split Data as Trainning set and Test set  
-from sklearn.model_selection import train_test_split
-X_train, X_test,y_train, y_test = train_test_split(X, y, test_size = 0.3, random_state = 1)
-
 
 # logistic regression Algorithm
 # Set regularization rate
 reg = 0.01
+
 # train a logistic regression model on the training set
 from sklearn.linear_model import LogisticRegression
-model = LogisticRegression(C=1/reg, solver="liblinear").fit(X_train, y_train)
+reg = 0.01
+model = LogisticRegression(C=1/reg, solver="liblinear")
+
+# Features Selection
+from sklearn.feature_selection import SelectFromModel
+modelSel = SelectFromModel(model.fit(X, y), prefit=True)
+selfeat = modelSel.transform(X)
+modelSel.get_support()
+
+_save(modelSel.get_support() , SUPPORT)
+
+# Features Scaling
+from sklearn.preprocessing import MinMaxScaler
+sel = MinMaxScaler()
+SclFeat = sel.fit_transform(selfeat,y)
+
+# Split Data as Trainning set and Test set  
+from sklearn.model_selection import train_test_split
+X_train, X_test,y_train, y_test = train_test_split(SclFeat, y, test_size = 0.3, random_state = 1)
 
 # Fitting Data
 model.fit(X_train, y_train)
 
 # save the model in the dirctory
-_saveModel(LOGISTIC_REGRESSION_MODEL)
+_save(model , LOGISTIC_REGRESSION_MODEL)
 
 # Test Model
 
@@ -48,13 +60,12 @@ PredictProba = model.predict_proba(X_test)
 
 # Get Accuracy , Precision and Recall
 from sklearn.metrics import accuracy_score, precision_score, recall_score
-accuracy  = accuracy_score(predictions, y_test)
-precision = precision_score(predictions, y_test)
-recall    = recall_score(predictions, y_test)
+accuracy  = accuracy_score(y_test, predictions)
+precision = precision_score(y_test, predictions)
+recall    = recall_score(y_test, predictions)
 performance = {"Accuracy": accuracy,
                "Precision": precision,
                "Recall": recall}
-
 
 # Visualize Performance
 from sklearn.metrics import roc_auc_score, roc_curve
@@ -65,13 +76,14 @@ print(classification_report(y_test, predictions))
 # Get evaluation metrics
 cm = confusion_matrix(y_test, predictions)
 print('Confusion Matrix:\n', cm, '\n')
-print('Accuracy:', accuracy_score(y_test, predictions))
-print("Overall Precision:", precision_score(y_test, predictions))
-print("Overall Recall:", recall_score(y_test, predictions))
+print('Accuracy:', performance["Accuracy"])
+print("Overall Precision:",  performance["Precision"])
+print("Overall Recall:", performance["Recall"])
 auc = roc_auc_score(y_test, PredictProba[:, 1])
 print('AUC: ' + str(auc))
 
 # calculate ROC curve
+import matplotlib.pyplot as plt
 fpr, tpr, thresholds = roc_curve(y_test, PredictProba[:, 1])
 
 # plot ROC curve

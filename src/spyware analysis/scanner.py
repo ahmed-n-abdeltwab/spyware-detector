@@ -6,7 +6,8 @@ import hashlib
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 
-PATH="samples/ALL"
+ROOT_PATH = os.path.abspath(os.path.dirname(__file__))
+PATH = os.path.join(ROOT_PATH, './test')
 labels =[]
 entropy=[]
 hashes=[]
@@ -122,6 +123,7 @@ df.index.name = "labels"
 df["entropy"] = entropy
 df["hash"] = hashes
 df.to_csv(r'FinalStaticDataSet.csv')
+print(df)
 
 #######################################
 

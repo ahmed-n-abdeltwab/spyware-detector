@@ -51,7 +51,7 @@ const printPrediction = (filename, prediction, fileHash, entropy) => {
 
   const pPrediction = document.createElement("p");
   pPrediction.innerHTML = `The file " ${filename} " is 
-${prediction === -1 ? malware : notMalware}`;
+${prediction === 0 ? malware : notMalware}`;
   const pFileHash = document.createElement("p");
   pFileHash.innerHTML =
     "<a href='" +

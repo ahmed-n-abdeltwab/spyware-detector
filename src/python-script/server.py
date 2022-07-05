@@ -40,6 +40,7 @@ def classifier():
         features = request.get_json(force=True)
         try:
             prediction = Classifier(features)
+            print(prediction)
             return prediction, 200
         except Exception as e:
             traceback.print_exc()

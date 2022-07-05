@@ -94,16 +94,17 @@ def Scanner(current_file):
     content.replace("[", " ")
     content.replace("]", " ")
     content.replace('"', " ")
-    print(content)
+    # print(content)
     dataset = pd.read_csv(PathOfTheDataSet)
 
     features = []
     for key in dataset.keys()[1:-2]:
         features.append(readMultiple(content, key))
-    print(features)
+    # print(features)
 
     hash_sha256 = hashlib.sha256(fileData).hexdigest()
     entropy = calcEntropy(fileData)
+    features.append(float(entropy))
     return {
         "features": features,
         "details": {

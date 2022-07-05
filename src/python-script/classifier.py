@@ -5,19 +5,20 @@ import json
 
 def Classifier(scannerResult):
     features = scannerResult[0]
+    # print(features)
     API_list = scannerResult[1]
     # filter the features list 
-    features = np.array(features)
-    filter_arr = list(joblib.load("./static/support.json"))
-    features = features[filter_arr]
+    # features = np.array(features)
+    # filter_arr = list(joblib.load("./static/support.json"))
+    # features = features[filter_arr]
 
     # load the model
-    model = joblib.load("./models/StaticMalwareMatrix_LR")
+    model = joblib.load("./models/LOGISTIC_REGRESSION_MODEL")
 
     # get the prediction
     prediction = int(model.predict([features])[0])
     pred_pro = list(model.predict_proba([features])[0])
-    if prediction == -1 :
+    if prediction == 0 :
         return {"prediction": prediction, "details": {"prob": pred_pro, "topReason": topReason(API_list)}}
     return {"prediction": prediction, "details": {"prob": pred_pro}}
 

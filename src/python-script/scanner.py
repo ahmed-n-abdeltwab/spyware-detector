@@ -108,7 +108,7 @@ def Scanner(current_file):
     return {
         "features": features,
         "details": {
-            "API_list": API_list,
+            "apiList": API_list,
             "fileHash": hash_sha256,
             "entropy": entropy,
         },

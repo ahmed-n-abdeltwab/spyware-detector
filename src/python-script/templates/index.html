@@ -10,35 +10,33 @@
 </head>
 
 <body>
-    <div id="grid">
-        <div class="main">
-            <div id="logoContainer"><a href="/">
-                    <h1>Spyware Detector
-                </a></h1>
-            </div>
-
-            <div class="preview">
-                <h5>Browse to Paste a File~</h5>
-                <!-- <h5>Browse, Drop, or Ctrl+V to Paste a File~</h5> -->
-            </div>
-
-            <form id="fileForm" enctype="multipart/form-data" method="post">
-                <div id="fileRowContainer">
-                    <input id="fileInput" type="file" name="file"
-                        title="Browse to select an file to scan"/>
-                    <span id="fileInputLabel">Select File</span>
-                </div>
-            </form>
-            <div id="result">
-            </div>
+  <div class="main">
+    <h1><a href="/">Spyware-Detector</a></h1>
+    <div class="container">
+      <div id="file-container" class="lft item col-1">
+        <div class="preview">
+          <h5>Browse to Paste a File~</h5>
+          <!-- <h5>Browse, Drop, or Ctrl+V to Paste a File~</h5> -->
         </div>
-        <div id="spacer">
-        </div>
-        <footer>
-            <p>Copyright © 2022. All Rights Reserved</p>
-        </footer>
+        <div id="fileRowContainer">
+          <form id="fileForm" enctype="multipart/form-data" method="post">
 
+            <input id="file-input" type="file" name="file" title="Browse to select an file to scan" />
+            <span id="fileInputLabel">Select File</span>
+
+          </form>
+        </div>
+      </div>
+      <div id="result" class="mid item hide">
+      </div>
+      <div id="api-list" class="rit item hide">
+      </div>
     </div>
+    <footer>
+      <p>Copyright © 2022. All Rights Reserved</p>
+  </footer>
+  </div>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
         integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
         crossorigin="anonymous"></script>

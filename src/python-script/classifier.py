@@ -15,7 +15,6 @@ def Classifier(scannerResult):
     # Features Scaling
     Sclfeatures = MinMaxScaler().fit_transform(features.reshape(len(features), -1))
     Sclfeatures = Sclfeatures.reshape(1, -1)
-    print(Sclfeatures)
     # load the model
     model = joblib.load("./LOGISTIC_REGRESSION_MODEL.joblib")
 
@@ -25,7 +24,7 @@ def Classifier(scannerResult):
     if prediction == 0:
         return {
             "prediction": prediction,
-            "details": {"prob": pred_pro, "topReason": topReason(API_list)},
+            "details": {"prob": pred_pro, "apiList": topReason(API_list)},
         }
     return {"prediction": prediction, "details": {"prob": pred_pro}}
 

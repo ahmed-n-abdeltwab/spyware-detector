@@ -15,7 +15,6 @@ def Classifier(scannerResult):
     # Features Scaling
     Sclfeatures = MinMaxScaler().fit_transform(features.reshape(len(features), -1))
     Sclfeatures = Sclfeatures.reshape(1, -1)
-    print(Sclfeatures)
     # load the model
     model = joblib.load("./LOGISTIC_REGRESSION_MODEL.joblib")
 

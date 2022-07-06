@@ -1,5 +1,65 @@
+body {
+  background-color: #151513;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+}
+.main-div {
+  border: 4px solid #8e9391;
+  padding: 20px;
+  width: 1300px;
+  height: 500px;
+  display: flex;
+}
+#lft {
+  border-radius: 5%;
+  border: 3px solid #8e9391;
+  padding: 5px;
+  width: 30%;
+  display: block;
+}
+#mid {
+  border-radius: 5%;
+  border: 4px solid #8e9391;
+  padding: 10px;
+  width: 30%;
+  margin-left: 2%;
+  display: block;
+}
+#rit {
+  border-radius: 5%;
+  border: 4px solid #8e9391;
+  padding: 10px;
+  width: 30%;
+  margin-left: 2%;
+  display: block;
+}
+
+a {
+  /* text-align: center; */
+  text-decoration: none;
+  color: #fff;
+}
+h1 {
+  font-size: 2.4rem;
+  text-align: center;
+}
+/* input {
+  position: center;
+  margin: 40% 0 0% 35%;
+  width: 30%;
+  height: 10%;
+}
+input:hover {
+  cursor: pointer;
+  background-color: #4de436;
+  color: #0026ff;
+  border-radius: 10%;
+  font-size: large;
+} */
+
 .container {
-  border: 4px solid blue;
+  /* border: 4px solid blue; */
   padding: 10px;
   width: min(100% - 2rem);
   margin-inline: auto;
@@ -12,18 +72,19 @@
   grid-template-columns: repeat(1, auto);
 }
 .col-2 {
-    grid-template-columns: repeat(2, auto);
-  }
+  grid-template-columns: repeat(2, auto);
+}
 .col-3 {
   grid-template-columns: repeat(3, auto);
 }
 
 .item {
-  border: 4px solid red;
+  /* border: 4px solid red; */
   display: inline-block;
   overflow-wrap: break-word;
   padding: 10px;
   justify-self: center;
+  align-self: center;
 }
 
 .hide {
@@ -34,11 +95,11 @@
   color: #aaa;
   font-size: 0.9rem;
 }
-#api-list a,
+/* #api-list a,
 #result a {
     color: rgb(0, 0, 0);
     text-decoration: none;
-}
+} */
 
 #fileRowContainer {
   background: rgb(56, 56, 56);
@@ -75,4 +136,24 @@
   left: 0;
   opacity: 0;
   z-index: 2;
+}
+.main {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+footer {
+  position: absolute; 
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  border-top: 1px solid #fff;
+  width: min(100% - 2rem, 600px);
+  margin: auto;
+  padding: 7px 0;
+  font-size: 0.8em;
+  font-weight: bold;
+  line-height: 2em;
 }

@@ -1,7 +1,8 @@
 const fileInput = document.querySelector("#file-input");
 const container = document.querySelector(".container");
 let fileForm = document.querySelector("#fileForm");
-
+const resultDiv = document.querySelector("#result");
+const apisDiv = document.querySelector("#api-list");
 // spans for malwares and not malwares
 const malware = "<span style='color:red;font-weight: bold;'>a Spyware</span>";
 const notMalware =
@@ -10,7 +11,16 @@ const malapiURL = "https://malapi.io/winapi/";
 const virustotalURL = "https://www.virustotal.com/gui/file/";
 
 fileInput.addEventListener("change", async (e) => {
+  // prevent the default action of the event
   e.preventDefault();
+  // reset the result div and the apis div
+  resultDiv.innerHTML = "";
+  apisDiv.innerHTML = "";
+  resultDiv.classList.add("hide");
+  apisDiv.classList.add("hide");
+  container.classList.add("col-1");
+  container.classList.remove("col-2");
+  container.classList.remove("col-3");
   // fetch the features from the scanner
   const formData = new FormData(fileForm);
   const scannerResult = await postData(
@@ -60,7 +70,6 @@ const printPrediction = (predictionResult) => {
    * @param {string} predictionResult.fileHash
    * @param {float} predictionResult.entropy
    */
-  const resultDiv = document.querySelector("#result");
   resultDiv.classList.remove("hide");
   container.classList.remove("col-1");
   container.classList.add("col-2");
@@ -76,7 +85,6 @@ const printPrediction = (predictionResult) => {
 
 // print the reasons for the prediction
 const printAPIsList = (APIs) => {
-  const apisDiv = document.querySelector("#api-list");
   apisDiv.classList.remove("hide");
   container.classList.remove("col-2");
   container.classList.add("col-3");

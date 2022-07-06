@@ -25,7 +25,7 @@ def Classifier(scannerResult):
     if prediction == 0:
         return {
             "prediction": prediction,
-            "details": {"prob": pred_pro, "topReason": topReason(API_list)},
+            "details": {"prob": pred_pro, "apiList": topReason(API_list)},
         }
     return {"prediction": prediction, "details": {"prob": pred_pro}}
 

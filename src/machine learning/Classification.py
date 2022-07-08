@@ -20,11 +20,10 @@ y = df.iloc[:,0].values
 
 # logistic regression Algorithm
 # Set regularization rate
-reg = 0.01
+reg = 0.1
 
 # train a logistic regression model on the training set
 from sklearn.linear_model import LogisticRegression
-reg = 0.01
 model = LogisticRegression(C=1/reg, solver="liblinear")
 
 # Features Selection

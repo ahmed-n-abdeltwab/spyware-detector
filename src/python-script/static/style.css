@@ -64,8 +64,8 @@ input:hover {
   width: min(100% - 2rem);
   margin-inline: auto;
   display: grid;
-  column-gap: 7px;
-  row-gap: 7px;
+  column-gap: 4px;
+  row-gap: 4px;
 }
 
 .col-1 {

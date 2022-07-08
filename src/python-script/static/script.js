@@ -3,6 +3,7 @@ const container = document.querySelector(".container");
 let fileForm = document.querySelector("#fileForm");
 const resultDiv = document.querySelector("#result");
 const apisDiv = document.querySelector("#api-list");
+const errorDiv = document.querySelector("#error");
 // spans for malwares and not malwares
 const malware = "<span style='color:red;font-weight: bold;'>a Spyware</span>";
 const notMalware =
@@ -10,10 +11,21 @@ const notMalware =
 const malapiURL = "https://malapi.io/winapi/";
 const virustotalURL = "https://www.virustotal.com/gui/file/";
 
+const handleError = (error) => {
+  errorDiv.innerHTML = "";
+  const paragraph = document.createElement("p");
+  paragraph.style.color = "red";
+  paragraph.style.textAlign = "center";
+  console.log(error);
+  paragraph.innerHTML = `Error: ${error.message}`;
+  errorDiv.appendChild(paragraph);
+};
+
 fileInput.addEventListener("change", async (e) => {
   // prevent the default action of the event
   e.preventDefault();
   // reset the result div and the apis div
+  errorDiv.innerHTML = "";
   resultDiv.innerHTML = "";
   apisDiv.innerHTML = "";
   resultDiv.classList.add("hide");
@@ -24,13 +36,12 @@ fileInput.addEventListener("change", async (e) => {
   // fetch the features from the scanner
   const formData = new FormData(fileForm);
   const scannerResult = await postData(
-    "http://127.0.0.1:4000/api/v1/scanner",
+    "http://127.0.0.1:3000/api/v1/scanner",
     formData
   );
-
   // fetch the prediction from the classifier
   const classifierResult = await postData(
-    "http://127.0.0.1:4000/api/v1/classifier",
+    "http://127.0.0.1:3000/api/v1/classifier",
     [scannerResult.features, scannerResult.details.apiList] // features and apiList of the scanner
   );
 
@@ -46,9 +57,8 @@ fileInput.addEventListener("change", async (e) => {
       if (classifierResult.details.apiList.length > 0)
         printAPIsList(classifierResult.details.apiList); // print the APIs for the prediction from many resources
     }
-    divUnhider();
   } catch (error) {
-    console.log(error);
+    handleError(error);
   }
 });
 
@@ -57,9 +67,9 @@ const postData = async (url, data) => {
     return await axios
       .post(url, data)
       .then((response) => response.data)
-      .catch((error) => console.log(error));
+      .catch((error) => handleError(error));
   } catch (error) {
-    alart(error);
+    handleError(error);
   }
 };
 // print the result of the classifier
@@ -112,48 +122,3 @@ window.onresize = (event) => {
     }
   }
 };
-
-// document.onpaste = function (event) {
-//   urlInput = document.getElementById("urlInput");
-//   if (event.target == urlInput) {
-//     //don't interfere with paste to url box - allows ios to paste image links properly
-//     //give some time for paste to finish normally before checking
-//     setTimeout(function () {
-//       getURLInput(urlInput);
-//     }, 4);
-//     return;
-//   } else {
-//     event.preventDefault();
-//     clipboardData = event.clipboardData || event.originalEvent.clipboardData;
-//     if (typeof clipboardData.files[0] == "undefined") {
-//       urlInput.value = clipboardData.getData("Text");
-//       getURLInput(urlInput);
-//     } else {
-//       fileInput = document.getElementById("fileInput");
-//       fileInput.files = clipboardData.files;
-//       checkFile(fileInput);
-//     }
-//   }
-// };
-// document.ondragover = document.ondragenter = function (event) {
-//   event.preventDefault();
-// };
-// document.ondrop = function (event) {
-//   fileInput = document.getElementById("fileInput");
-//   if (event.target == fileInput) {
-//     //don't interfere with drop on file select - allows old browsers to drop properly
-//     //console.log("skipped drop!");
-//     return;
-//   } else {
-//     event.preventDefault();
-//     if (typeof event.dataTransfer.files[0] == "undefined") {
-//       urlInput = document.getElementById("urlInput");
-//       urlInput.value = event.dataTransfer.getData("text/uri-list");
-//       getURLInput(urlInput);
-//     } else {
-//       fileInput = document.getElementById("fileInput");
-//       fileInput.files = event.dataTransfer.files;
-//       checkFile(fileInput);
-//     }
-//   }
-// };

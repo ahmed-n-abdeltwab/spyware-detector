@@ -58,7 +58,7 @@ def Scanner(current_file):
     API_list = []
 
     fileData = current_file.read()
-    f = str(fileData, "latin-1").split()
+    f = str(fileData, "latin-1").split('\n')
     for line in f:
 
         urls = re.findall("https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+", line)
@@ -99,8 +99,7 @@ def Scanner(current_file):
 
     features = []
     for key in dataset.keys()[1:-2]:
-        features.append(readMultiple(content, key))
-    # print(features)
+        features.append(finalListOfTheFile.count(key.lower()))
 
     hash_sha256 = hashlib.sha256(fileData).hexdigest()
     entropy = calcEntropy(fileData)

@@ -25,7 +25,6 @@ def scanner():
     if request.method == "POST":
         try:
             file = request.files["file"]
-            fileName = file.filename
             features = Scanner(file)
             file.close()
             return features, 200
@@ -40,7 +39,6 @@ def classifier():
         features = request.get_json(force=True)
         try:
             prediction = Classifier(features)
-            print(prediction)
             return prediction, 200
         except Exception as e:
             traceback.print_exc()
@@ -48,4 +46,4 @@ def classifier():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=4000)
+    app.run(debug=True, port=3000)

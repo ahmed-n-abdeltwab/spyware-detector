@@ -1,1 +1,1 @@
-web: python3 python-script/server.pyweb: gunicorn run:app
+web: python3 python-script/server.py: gunicorn run:app

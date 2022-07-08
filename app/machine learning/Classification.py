@@ -20,11 +20,12 @@ y = df.iloc[:,0].values
 
 # logistic regression Algorithm
 # Set regularization rate
-reg = 0.1
+reg = 1
 
 # train a logistic regression model on the training set
 from sklearn.linear_model import LogisticRegression
-model = LogisticRegression(C=1/reg, solver="liblinear")
+
+model = LogisticRegression(C=reg, solver="liblinear")
 
 # Features Selection
 from sklearn.feature_selection import SelectFromModel
@@ -43,6 +44,7 @@ SclFeat = sel.fit_transform(selfeat,y)
 from sklearn.model_selection import train_test_split
 X_train, X_test,y_train, y_test = train_test_split(SclFeat, y, test_size = 0.3, random_state = 1)
 
+
 # Fitting Data
 model.fit(X_train, y_train)
 
@@ -53,15 +55,19 @@ _save(model , LOGISTIC_REGRESSION_MODEL)
 
 # Make Predictions
 predictions = model.predict(X_test)
+# Make Predictions
+predictionsTrain = model.predict(X_train)
+
 
 # Get Probability od Predictions 
 PredictProba = model.predict_proba(X_test)
 
+
 # Get Accuracy , Precision and Recall
 from sklearn.metrics import accuracy_score, precision_score, recall_score
 accuracy  = accuracy_score(y_test, predictions)
-precision = precision_score(y_test, predictions)
-recall    = recall_score(y_test, predictions)
+precision = precision_score(y_test,  predictions)
+recall    = recall_score(y_test,  predictions)
 performance = {"Accuracy": accuracy,
                "Precision": precision,
                "Recall": recall}

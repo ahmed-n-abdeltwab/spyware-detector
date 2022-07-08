@@ -31,7 +31,7 @@ def Classifier(scannerResult):
 def usedAPIs(API_list):
     import pandas as pd
     try:
-        df = pd.read_html("ht0tps://malapi.io/", attrs={"id": "main-table"})
+        df = pd.read_html("https://malapi.io/", attrs={"id": "main-table"})
         Spying = (df[0]["Spying"][0]).split()
         Evasion = (df[0]["Evasion"][0]).split()
         malapiList = Lower(Spying + Evasion)

@@ -1,0 +1,1 @@
+python3 src/python-script/server.py

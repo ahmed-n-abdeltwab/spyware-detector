@@ -1,11 +1,10 @@
 import joblib
 import numpy as np
-import json
 
 
 def Classifier(scannerResult):
-    from sklearn.preprocessing import MinMaxScaler  # for scaling
-    features = scannerResult[0]    
+    features = scannerResult[0]  
+    print(features)  
     API_list = scannerResult[1]
     # filter the features list
     features = np.array(features)

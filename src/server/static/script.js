@@ -36,12 +36,12 @@ fileInput.addEventListener("change", async (e) => {
   // fetch the features from the scanner
   const formData = new FormData(fileForm);
   const scannerResult = await postData(
-    "http://0.0.0.0:8080/api/v1/scanner",
+    "http://127.0.0.1:8000/api/v1/scanner",
     formData
   );
   // fetch the prediction from the classifier
   const classifierResult = await postData(
-    "http://0.0.0.0:8080/api/v1/classifier",
+    "http://127.0.0.1:8000/api/v1/classifier",
     [scannerResult.features, scannerResult.details.apiList] // features and apiList of the scanner
   );
 

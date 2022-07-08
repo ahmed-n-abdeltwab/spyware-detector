@@ -144,10 +144,6 @@ input:hover {
   bottom: 0;
 }
 footer {
-  position: absolute; 
-  bottom: 0;
-  left: 0;
-  right: 0;
   text-align: center;
   border-top: 1px solid #fff;
   width: min(100% - 2rem, 600px);
@@ -159,4 +155,17 @@ footer {
 }
 .main {
   display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+.header {
+  grid-column: 2/4;
+}
+.container {
+  grid-column: 2/4;
+}
+footer {
+  grid-column: 2/4;
+}
+.space {
+  grid-column: 2/4;
 }

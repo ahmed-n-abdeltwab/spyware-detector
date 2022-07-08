@@ -157,3 +157,6 @@ footer {
   font-weight: bold;
   line-height: 2em;
 }
+.main {
+  display: grid;
+}

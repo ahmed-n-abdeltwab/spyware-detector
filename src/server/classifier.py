@@ -4,7 +4,6 @@ import numpy as np
 
 def Classifier(scannerResult):
     features = scannerResult[0]  
-    print(features)  
     API_list = scannerResult[1]
     # filter the features list
     features = np.array(features)

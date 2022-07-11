@@ -52,6 +52,7 @@ fileInput.addEventListener("change", async (e) => {
   );
   // remove the loader
   loader.classList.add("hide");
+  fileContainer.classList.remove("hide");
   // print the result of the classifier
   const predictionResult = {
     name: fileInput.files[0].name,
@@ -88,7 +89,6 @@ const printPrediction = (predictionResult) => {
    * @param {string} predictionResult.fileHash
    * @param {float} predictionResult.entropy
    */
-  fileContainer.classList.remove("hide");
   resultDiv.classList.remove("hide");
   container.classList.remove("col-1");
   container.classList.add("col-2");
@@ -107,6 +107,7 @@ const printAPIsList = (APIs) => {
   apisDiv.classList.remove("hide");
   container.classList.remove("col-2");
   container.classList.add("col-3");
+
   const content = `
   <h3>Used APIs :</h3>
   <ul>

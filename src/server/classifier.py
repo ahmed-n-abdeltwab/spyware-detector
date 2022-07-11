@@ -36,7 +36,9 @@ def usedAPIs(API_list):
         df = pd.read_html("https://malapi.io/", attrs={"id": "main-table"})
         Spying = (df[0]["Spying"][0]).split()
         Evasion = (df[0]["Evasion"][0]).split()
-        malapiList = Lower(Spying + Evasion)
+        Internet = (df[0]["Internet"][0]).split()
+        Injection = (df[0]["Injection"][0]).split()
+        malapiList = Lower(Spying + Evasion + Internet + Injection)
         API_list = Lower(API_list)
         return list(filter(lambda api: api in API_list, malapiList))
     except:

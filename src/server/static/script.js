@@ -14,6 +14,8 @@ const malapiURL = "https://malapi.io/winapi/";
 const virustotalURL = "https://www.virustotal.com/gui/file/";
 
 const handleError = (error) => {
+  loader.classList.add("hide");
+  fileContainer.classList.remove("hide");
   errorDiv.innerHTML = "";
   const paragraph = document.createElement("p");
   paragraph.style.color = "red";

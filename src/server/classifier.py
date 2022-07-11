@@ -17,7 +17,7 @@ def Classifier(scannerResult):
     features = features.reshape(1, -1)
 
     # load the model
-    model = joblib.loads(LOGISTIC_REGRESSION_MODEL)
+    model = joblib.load(LOGISTIC_REGRESSION_MODEL)
 
     # get the prediction
     prediction = int(model.predict(features)[0])

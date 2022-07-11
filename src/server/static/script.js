@@ -4,6 +4,8 @@ let fileForm = document.querySelector("#fileForm");
 const resultDiv = document.querySelector("#result");
 const apisDiv = document.querySelector("#api-list");
 const errorDiv = document.querySelector("#error");
+const loader = document.querySelector(".loader");
+const fileContainer = document.querySelector("#file-container");
 // spans for malwares and not malwares
 const malware = "<span style='color:red;font-weight: bold;'>a Spyware</span>";
 const notMalware =
@@ -20,7 +22,7 @@ const handleError = (error) => {
   paragraph.innerHTML = `Error: ${error.message}`;
   errorDiv.appendChild(paragraph);
 };
-
+const loading = () => {};
 fileInput.addEventListener("change", async (e) => {
   // prevent the default action of the event
   e.preventDefault();
@@ -29,13 +31,17 @@ fileInput.addEventListener("change", async (e) => {
   resultDiv.innerHTML = "";
   apisDiv.innerHTML = "";
   resultDiv.classList.add("hide");
+  fileContainer.classList.add("hide");
   apisDiv.classList.add("hide");
+  loader.classList.remove("hide");
   container.classList.add("col-1");
   container.classList.remove("col-2");
   container.classList.remove("col-3");
   // fetch the features from the scanner
   const formData = new FormData(fileForm);
-  const scannerResult = await postData( // https://spyware-detector.herokuapp.com/
+  const scannerResult = await postData(
+    // https://spyware-detector.herokuapp.com/
+    // http://127.0.0.1:8000/
     "https://spyware-detector.herokuapp.com/api/v1/scanner",
     formData
   );
@@ -44,7 +50,9 @@ fileInput.addEventListener("change", async (e) => {
     "https://spyware-detector.herokuapp.com/api/v1/classifier",
     [scannerResult.features, scannerResult.details.apiList] // features and apiList of the scanner
   );
-
+  // remove the loader
+  loader.classList.add("hide");
+  // print the result of the classifier
   const predictionResult = {
     name: fileInput.files[0].name,
     prediction: classifierResult.prediction,
@@ -80,6 +88,7 @@ const printPrediction = (predictionResult) => {
    * @param {string} predictionResult.fileHash
    * @param {float} predictionResult.entropy
    */
+  fileContainer.classList.remove("hide");
   resultDiv.classList.remove("hide");
   container.classList.remove("col-1");
   container.classList.add("col-2");

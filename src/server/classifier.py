@@ -11,7 +11,7 @@ def Classifier(scannerResult):
     API_list = scannerResult[1]
     # filter the features list
     features = np.array(features)
-    filter_arr = list(joblib.loads(SUPPORT))
+    filter_arr = list(joblib.load(SUPPORT))
     features = features[filter_arr]
 
     features = features.reshape(1, -1)

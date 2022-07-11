@@ -35,7 +35,7 @@ fileInput.addEventListener("change", async (e) => {
   container.classList.remove("col-3");
   // fetch the features from the scanner
   const formData = new FormData(fileForm);
-  const scannerResult = await postData(
+  const scannerResult = await postData( // https://spyware-detector.herokuapp.com/
     "https://spyware-detector.herokuapp.com/api/v1/scanner",
     formData
   );

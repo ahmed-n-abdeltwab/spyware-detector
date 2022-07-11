@@ -6,7 +6,6 @@ import traceback
 
 
 ROOT_PATH = os.path.abspath(os.path.dirname(__file__))
-PathOfTheDataSet = os.path.join(ROOT_PATH, '../datasets/malwares.csv')
 
 app = Flask(
     __name__,

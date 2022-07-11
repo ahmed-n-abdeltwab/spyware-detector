@@ -1,19 +1,23 @@
 import joblib
 import numpy as np
+import os
 
+ROOT_PATH = os.path.abspath(os.path.dirname(__file__))
+LOGISTIC_REGRESSION_MODEL = os.path.join(ROOT_PATH,'LOGISTIC_REGRESSION_MODEL.joblib')
+SUPPORT = os.path.join(ROOT_PATH,'SUPPORT.joblib')
 
 def Classifier(scannerResult):
     features = scannerResult[0]  
     API_list = scannerResult[1]
     # filter the features list
     features = np.array(features)
-    filter_arr = list(joblib.load("./SUPPORT.joblib"))
+    filter_arr = list(joblib.loads(SUPPORT))
     features = features[filter_arr]
 
     features = features.reshape(1, -1)
 
     # load the model
-    model = joblib.load("./LOGISTIC_REGRESSION_MODEL.joblib")
+    model = joblib.loads(LOGISTIC_REGRESSION_MODEL)
 
     # get the prediction
     prediction = int(model.predict(features)[0])

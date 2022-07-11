@@ -20,8 +20,8 @@ const handleError = (error) => {
   const paragraph = document.createElement("p");
   paragraph.style.color = "red";
   paragraph.style.textAlign = "center";
-  console.log(error);
-  paragraph.innerHTML = `Error: ${error.message}`;
+  paragraph.style.fontSize = "1rem";
+  paragraph.innerHTML = `<strong>${error.response.data.msg.replace(/'/g, '')}</strong>`;
   errorDiv.appendChild(paragraph);
 };
 const loading = () => {};

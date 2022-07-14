@@ -36,13 +36,6 @@ python server.py
 * #### Ahmed Moamer
 
 
-[![Linkedin Connect](https://img.shields.io/badge/Connect-Ahmed-lightgrey?style=social&logo=linkedin)](https://www.linkedin.com/in/ahmed-nasser-94a765171/)
-
-You can also follow my GitHub Profile to stay updated about my latest projects:
-
-[![GitHub Follow](https://img.shields.io/badge/Follow-Ahmed-lightgrey?style=social&logo=github)](https://github.com/ahmednss)
-
-
 If you liked the repo then kindly support it by giving it a star ⭐!
 
 

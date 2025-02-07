@@ -1,9 +1,9 @@
 blank_issues_enabled: false
 contact_links:
   - name: 💬 Community Discussion
-    url: https://github.com/spyware-detector/discussions
+    url: https://github.com/ahmed-n-abdeltwab/spyware-detector/discussions
     about: "For general discussions, ideas, and questions about the project."
   
   - name: 🔐 Security Issues
-    url: https://github.com/spyware-detector/security
+    url: https://github.com/ahmed-n-abdeltwab/spyware-detector/security
     about: "For reporting security vulnerabilities. Please do NOT open a public issue."

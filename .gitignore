@@ -1,6 +1,78 @@
-# python addition file
-__pycache__
-UMLs
-venv
-.vscode
+# Node.js & TypeScript (Backend)
+backend/node_modules/
+backend/dist/
+backend/.env
+backend/.DS_Store
+backend/package-lock.json
+backend/yarn.lock
+backend/.turbo/
+
+# Python (ML Model)
+ml_model/__pycache__/
+ml_model/.venv/
+ml_model/env/
+ml_model/.env
+ml_model/.DS_Store
+ml_model/.pytest_cache/
+ml_model/venv/
+ml_model/models/
+ml_model/data/
+ml_model/logs/
+
+# Logs & Temp Files
+logs/
+*.log
+*.tmp
+*.swp
+*.swo
+*.pid
+*.seed
+
+# Build Artifacts
+*.out
+*.o
+*.pyc
+*.pyo
+*.pyd
+*.class
+
+# IDE & OS Files
+.vscode/
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Git & Dependency Management
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Docker
+docker-compose.override.yml
+backend/.dockerignore
+ml_model/.dockerignore
+
+# Coverage & Testing
+coverage/
+.nyc_output/
+jest/
+junit.xml
+*.test.js
+*.test.ts
+*.spec.js
+*.spec.ts
+
+# Security
+secrets/
+.env.local
+.env.production
+.env.development
+.env.test
+
+# UML & Documentation (Optional)
+docs/generated/
+readme_images/
+uml_diagrams/
 *graphml

@@ -24,9 +24,9 @@ python server.py
 
 |  Screenshots    |
 |:----:|
-| ![Pages 1](readme_images/img1.png) |
-| ![Pages 2](readme_images/img2.png) |
-| ![Pages 3](readme_images/img3.png) |
+| ![Pages 1](images/img1.png) |
+| ![Pages 2](images/img2.png) |
+| ![Pages 3](images/img3.png) |
 
 ---
 

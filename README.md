@@ -1,6 +1,6 @@
 <h1 align="center">Spyware Detector</h1><p align="center">It's a Spyware Detector Website <b>Powered by Machine Learning</b> <br></p>
 
-![Banner](images/banner.png)
+![Banner](docs/images/banner.png)
 
 ![python](https://img.shields.io/badge/python-3.10.2-brightgreen?style=flat-square&logo=python)
 [![GitHub forks](https://img.shields.io/github/forks/ahmednss/spyware-detector?style=social)](https://github.com/ahmednss/spyware-detector/fork)

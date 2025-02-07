@@ -1,6 +1,6 @@
 <h1 align="center">Spyware Detector</h1><p align="center">It's a Spyware Detector Website <b>Powered by Machine Learning</b> <br></p>
 
-![Banner](readme_images/banner.png)
+![Banner](images/banner.png)
 
 ![python](https://img.shields.io/badge/python-3.10.2-brightgreen?style=flat-square&logo=python)
 [![GitHub forks](https://img.shields.io/github/forks/ahmednss/spyware-detector?style=social)](https://github.com/ahmednss/spyware-detector/fork)
@@ -39,28 +39,6 @@ We are improving this project with a **step-by-step refactoring** approach. Belo
 12. **Enhance CI/CD Pipelines** – Automate deployments using GitHub Actions or Jenkins.
 13. **Improve Logging & Metrics** – Use Prometheus and Grafana for system monitoring.
 14. **Optimize Performance** – Reduce scanning latency and optimize processing.
-
----
-
-## 📂 Project Structure
-
-```
-📦 your-repo/
- ┣ 📂 .github/
- ┃ ┣ 📂 ISSUE_TEMPLATE/   # GitHub issue templates
- ┃ ┗ 📜 config.yml        # GitHub issue settings
- ┣ 📂 docs/               # Documentation & Diagrams
- ┃ ┣ 📂 images/           # General images
- ┃ ┣ 📂 uml/              # UML diagrams (Class, Sequence, etc.)
- ┃ ┗ 📜 API_DOCS.md       # API Documentation
- ┣ 📂 src/                # Backend source code (TypeScript)
- ┣ 📜 CONTRIBUTING.md     # Contribution guidelines
- ┣ 📜 SECURITY.md         # Security policies
- ┣ 📜 CODE_OF_CONDUCT.md  # Community guidelines
- ┣ 📜 SUPPORT.md          # How to get support
- ┣ 📜 README.md           # You are here! 🚀
- ┗ 📜 package.json        # Dependencies
-```
 
 ---
 

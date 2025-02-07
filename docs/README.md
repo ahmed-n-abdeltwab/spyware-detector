@@ -7,76 +7,111 @@
 
 ---
 
-## Installation Steps
 
-Open CMD where you want to clone the project & run the following commands
+### 📌 **`README.md`**
+
+# 🚀 Scalable File Upload & ML-Based Virus Scanning
+
+A **real-time**, **scalable**, and **secure** file scanning system that uses **machine learning** (ML) to detect potential threats. This project focuses on **modular architecture**, **distributed processing**, and **TypeScript-based backend migration** for enhanced security.
+
+---
+
+## 📋 To-Do List
+
+We are improving this project with a **step-by-step refactoring** approach. Below is the prioritized list of tasks from **most complex** to **easiest**:
+
+### 🏗 **High-Priority / Complex Tasks**
+1. **Isolate the Scanning Process** – Run the scanning service in a secure, isolated environment (e.g., Dockerized sandbox or VM).
+2. **Implement Asynchronous & Distributed Processing** – Ensure scalable and high-performance scanning.
+3. **Migrate Backend from Flask to TypeScript** – Improve security and maintainability.
+4. **Enhance Security Measures** – Sandboxing, rate limiting, request validation, and API authentication.
+5. **Support Multi-OS Scanning Services** – Enable scanning on Windows, Linux, and macOS.
+
+### ⚡ **Medium-Priority Tasks**
+6. **Improve Failure Detection & Monitoring** – Implement logging and real-time alerts.
+7. **Add Support for Dynamic Script Updates** – Allow new scanning rules and ML models to be added without downtime.
+8. **Refactor Code Structure** – Organize the codebase for scalability and maintainability.
+9. **Database Optimization & Efficient File Storage** – Use appropriate data models and storage solutions.
+
+### 🛠 **Low-Priority / Easier Tasks**
+10. **Improve Documentation** – Expand API documentation, guides, and examples.
+11. **Add Unit & Integration Tests** – Improve code quality and reliability.
+12. **Enhance CI/CD Pipelines** – Automate deployments using GitHub Actions or Jenkins.
+13. **Improve Logging & Metrics** – Use Prometheus and Grafana for system monitoring.
+14. **Optimize Performance** – Reduce scanning latency and optimize processing.
+
+---
+
+## 📂 Project Structure
 
 ```
-git clone https://github.com/Ahmed-nd/spyware-detector.git
-cd src/python-script/
-pip install -r requirements.txt
-python server.py
+📦 your-repo/
+ ┣ 📂 .github/
+ ┃ ┣ 📂 ISSUE_TEMPLATE/   # GitHub issue templates
+ ┃ ┗ 📜 config.yml        # GitHub issue settings
+ ┣ 📂 docs/               # Documentation & Diagrams
+ ┃ ┣ 📂 images/           # General images
+ ┃ ┣ 📂 uml/              # UML diagrams (Class, Sequence, etc.)
+ ┃ ┗ 📜 API_DOCS.md       # API Documentation
+ ┣ 📂 src/                # Backend source code (TypeScript)
+ ┣ 📜 CONTRIBUTING.md     # Contribution guidelines
+ ┣ 📜 SECURITY.md         # Security policies
+ ┣ 📜 CODE_OF_CONDUCT.md  # Community guidelines
+ ┣ 📜 SUPPORT.md          # How to get support
+ ┣ 📜 README.md           # You are here! 🚀
+ ┗ 📜 package.json        # Dependencies
 ```
 
 ---
 
-## Gallery
+## 📜 Documentation & References
 
-|  Screenshots    |
-|:----:|
-| ![Pages 1](images/img1.png) |
-| ![Pages 2](images/img2.png) |
-| ![Pages 3](images/img3.png) |
-
----
-
-## **📌 To-Do List: Migration & Enhancements**  
-
-### **1️⃣ Migrate from Flask to TypeScript (🚀 Major Task)**
-- [ ] Set up a new backend using TypeScript with Express.js or Fastify  
-- [ ] Implement TypeScript types for API requests, responses, and database models  
-- [ ] Replace Python-based file handling logic with TypeScript equivalents  
-
-### **2️⃣ Implement Secure & Isolated File Scanning**  
-- [ ] Run file scanning inside an isolated environment (Docker, Firecracker)  
-- [ ] Integrate open-source sandboxing (e.g., Cuckoo Sandbox)  
-- [ ] Ensure proper access control for uploaded files  
-
-### **3️⃣ Scalable File Processing & Storage**  
-- [ ] Implement a queue-based processing system (RabbitMQ/Kafka)  
-- [ ] Support large file uploads with chunked/resumable uploads  
-- [ ] Store files in MinIO or a distributed file system  
-
-### **4️⃣ ML Model Integration & Optimization**  
-- [ ] Convert Python-based ML integration to TypeScript-compatible services  
-- [ ] Optimize the ML model for real-time analysis  
-- [ ] Implement model versioning and update mechanisms  
-
-### **5️⃣ Multi-Layered Virus Scanning**  
-- [ ] Integrate ClamAV/YARA for signature-based scanning  
-- [ ] Add ML-based detection for heuristic analysis  
-- [ ] Implement multi-engine scanning workflow  
-
-### **6️⃣ Security & API Hardening**  
-- [ ] Implement file validation to prevent malicious uploads  
-- [ ] Add API authentication & rate limiting (JWT, OAuth, API keys)  
-- [ ] Implement role-based access control (RBAC)  
-
-### **7️⃣ Monitoring & Failure Handling**  
-- [ ] Implement system health checks with Prometheus + Grafana  
-- [ ] Track scanning failures and implement retry mechanisms  
-- [ ] Log API and scanning activity for auditing  
-
-### **8️⃣ API & Documentation Improvements**  
-- [ ] Document API endpoints using OpenAPI (Swagger)  
-- [ ] Write unit and integration tests for backend stability  
-- [ ] Improve README with setup instructions and examples  
+| 📂 Document | 📌 Description |
+|------------|--------------|
+| [📜 CONTRIBUTING.md](CONTRIBUTING.md) | How to contribute to this project. |
+| [🔒 SECURITY.md](SECURITY.md) | Security policies and vulnerability reporting. |
+| [🚀 CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) | Community rules and expected behavior. |
+| [❓ SUPPORT.md](SUPPORT.md) | How to get support or ask questions. |
+| [📄 ISSUE_TEMPLATE](.github/ISSUE_TEMPLATE/) | GitHub issue templates for bug reports, feature requests, etc. |
+| [📊 UML Diagrams](docs/uml/) | System architecture, sequence diagrams, and class diagrams. |
+| [📸 ReadMe Images](docs/images/) | Images used in the documentation. |
 
 ---
 
-If you liked the repo then kindly support it by giving it a star ⭐!
+## 🛠 Tech Stack
 
+- **Backend**: TypeScript (Node.js, Express)
+- **ML Model**: Python (for file analysis)
+- **Database**: PostgreSQL / MongoDB
+- **Storage**: S3 / Local FS / MinIO
+- **Queue Processing**: RabbitMQ / Kafka
+- **Containerization**: Docker, Kubernetes
+- **Monitoring**: Prometheus + Grafana
 
+---
+
+## 🚀 Contributing
+
+We welcome all contributions! 🎉 Please check **[CONTRIBUTING.md](CONTRIBUTING.md)** for guidelines on how to get started.
+
+---
+
+## 📧 Contact
+
+- **Issues & Bug Reports**: Use the **[GitHub Issues](https://github.com/ahmed.n.abdeltwab/spyware-detector/issues)**
+- **Discussions**: Join the **[GitHub Discussions](https://github.com/ahmed.n.abdeltwab/spyware-detector/discussions)**
+- **Security Concerns**: Report via **[SECURITY.md](SECURITY.md)**
+
+---
+
+## 🏆 Acknowledgments
+
+Special thanks to all contributors who are helping build this project! 🚀  
+Feel free to **star** ⭐ this repository if you find it useful!
+
+---
+
+Would you like me to modify any sections or add more details? 🚀
 ## License
 
 spyware-detector is [MIT licenced](LICENSE.md)

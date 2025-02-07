@@ -79,5 +79,4 @@ If you liked the repo then kindly support it by giving it a star ⭐!
 
 ## License
 
-Copyright (c) 2022 Ahmed N.
-
+spyware-detector is [MIT licenced](LICENSE.md)

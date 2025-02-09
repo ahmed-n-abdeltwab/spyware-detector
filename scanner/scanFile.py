@@ -1,13 +1,16 @@
 import numpy as np
-import pickle
+import joblib
 import os
 from machine_learning.Classification import extract_features
 
 # Load the ML model
-MODEL_PATH = os.path.join('models', 'LOGISTIC_REGRESSION_MODEL')
-with open(MODEL_PATH, 'rb') as f:
-    model = pickle.load(f)
+MODEL_PATH = os.path.join('models', 'LOGISTIC_REGRESSION_MODEL.joblib')
 
+try:
+    model = joblib.load(MODEL_PATH)  # Use joblib to load the model
+except Exception as e:
+    raise RuntimeError(f"Error loading model from {MODEL_PATH}: {str(e)}")
+    
 def scan_file(file_bytes, file_name):
     """
     Scan a file using the ML model to detect malware
@@ -44,3 +47,4 @@ def scan_file(file_bytes, file_name):
 
     except Exception as e:
         raise Exception(f'Error scanning file: {str(e)}')
+        

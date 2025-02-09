@@ -18,4 +18,4 @@ ENV FLASK_PORT=${FLASK_PORT}
 EXPOSE ${FLASK_PORT}
 
 # Run the application
-CMD ["python", "scanner.py"]
+CMD ["python", "server.py"]

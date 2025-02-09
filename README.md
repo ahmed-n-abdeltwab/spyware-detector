@@ -28,7 +28,7 @@ Spyware Detector is a Node.js-based backend application that scans uploaded file
 ### Steps 🏗️
 1. Clone the repository: 📝
    ```sh
-   git clone https://github.com/your-repo/spyware-detector.git
+   git clone https://github.com/ahmed-n-abdeltwab/spyware-detector.git
    cd spyware-detector/backend
    ```
 2. Install dependencies: 📦

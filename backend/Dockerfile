@@ -1,5 +1,5 @@
 # Use an official Node.js runtime as a parent image
-FROM node:16
+FROM node:20
 
 # Set the working directory
 WORKDIR /app
@@ -22,4 +22,4 @@ ENV NODE_PORT=${NODE_PORT}
 EXPOSE ${NODE_PORT}
 
 # Run the application
-CMD ["node", "dist/index.js"]
+CMD ["node", "dist/server.js"]

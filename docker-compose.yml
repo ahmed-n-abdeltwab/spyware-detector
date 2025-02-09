@@ -17,7 +17,7 @@ services:
       context: ./backend
       args:
         - NODE_PORT=${NODE_PORT:-3000}  # Default to 3000 if not set
-        - MAX_FILE_SIZE=${MAX_FILE_SIZE:-10MB}
+        - MAX_FILE_SIZE=${MAX_FILE_SIZE:-5242880}
         - LOG_LEVEL=${LOG_LEVEL:-info}
     ports:
       - "${NODE_PORT:-3000}:${NODE_PORT:-3000}"

@@ -2,16 +2,21 @@ import numpy as np
 import math
 import re
 import os
+import joblib
+
+ROOT_PATH = os.path.abspath(os.path.dirname(__file__))
+SUPPORT = os.path.join(ROOT_PATH, 'models', 'SUPPORT.joblib')
 
 def extract_features(file_bytes):
     """
-    Extract features from a file for malware detection
+    Extract features from a file for malware detection, ensuring compatibility
+    with the trained model using SUPPORT.joblib.
     
     Args:
         file_bytes (bytes): Raw file content
         
     Returns:
-        list: Extracted feature vector
+        np.ndarray: Filtered feature vector
     """
     try:
         features = []
@@ -42,9 +47,17 @@ def extract_features(file_bytes):
         for pattern in suspicious_patterns:
             count = count_pattern(file_bytes, pattern)
             features.append(count)
-            
-        return features
-
+        
+        # Convert to numpy array
+        features = np.array(features)
+        
+        # Load feature filter from SUPPORT.joblib
+        filter_arr = list(joblib.load(SUPPORT))
+        features = features[filter_arr]
+        
+        # Reshape to match the model's input format
+        return features.reshape(1, -1)
+    
     except Exception as e:
         print(f"Error extracting features: {str(e)}")
         return None
@@ -72,3 +85,4 @@ def calculate_printable_ratio(data):
 def count_pattern(data, pattern):
     """Count occurrences of a pattern in data"""
     return len(re.findall(pattern, data))
+

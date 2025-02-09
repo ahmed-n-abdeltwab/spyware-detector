@@ -1,0 +1,50 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+.env/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Logs and database files
+*.log
+*.sqlite3
+db.sqlite3
+instance/
+
+# Machine learning artifacts
+*.h5
+*.hdf5
+*.pkl
+*.joblib
+*.pb
+
+# Cache and temporary files
+.cache/
+*.bak
+
+# Flask-specific files
+instance/
+config.py
+.env
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+
+# Docker
+*.dockerignore
+docker-compose.override.yml
+
+# the datasets
+*.csv

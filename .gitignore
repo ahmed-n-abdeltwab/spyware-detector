@@ -70,6 +70,7 @@ secrets/
 .env.production
 .env.development
 .env.test
+.env
 
 # UML & Documentation (Optional)
 docs/generated/

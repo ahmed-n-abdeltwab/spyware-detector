@@ -16,13 +16,25 @@ services:
     build:
       context: ./backend
       args:
-        - NODE_PORT=${NODE_PORT:-3000}  # Default to 3000 if not set
+        - BACK_PORT=${BACK_PORT:-3000}  # Default to 3000 if not set
         - MAX_FILE_SIZE=${MAX_FILE_SIZE:-5242880}
         - LOG_LEVEL=${LOG_LEVEL:-info}
     ports:
-      - "${NODE_PORT:-3000}:${NODE_PORT:-3000}"
+      - "${BACK_PORT:-3000}:${BACK_PORT:-3000}"
     depends_on:
       - scanner
     env_file:
       - .env
     restart: always
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        - FRONT_PORT=${FRONT_PORT:-80}  # Default to 80 if not set
+    ports:
+      - "${FRONT_PORT:-80}:${FRONT_PORT:-80}"
+    depends_on:
+      - backend
+    restart: always
+

@@ -2,7 +2,8 @@ import axios from 'axios';
 import { ScanResult } from '../types';
 import { logger } from '../utils/logger';
 
-const SCANNER_URL = process.env.SCANNER_URL || 'http://localhost:6000/scan';
+const SCANNER_URL = ( process.env.SCANNER_URL || 'http://localhost:5000' ) + '/scan';
+let length = 0;
 
 export const analyzefile = async (
   fileBuffer: Buffer,
@@ -33,6 +34,7 @@ export const analyzefile = async (
 
     // Transform scanner response to our ScanResult format
     const result: ScanResult = {
+      fileId: ++length,
       fileName,
       timestamp: new Date().toISOString(),
       fileSize: fileBuffer.length,
@@ -51,6 +53,7 @@ export const analyzefile = async (
   } catch (error) {
     logger.error('Error during file analysis:', error);
     return {
+      fileId: ++length,
       fileName,
       timestamp: new Date().toISOString(),
       fileSize: fileBuffer.length,

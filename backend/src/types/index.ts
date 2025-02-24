@@ -6,6 +6,7 @@ export interface FileMetadata {
 }
 
 export interface ScanResult {
+  fileId: number;
   fileName: string;
   timestamp: string;
   fileSize: number;

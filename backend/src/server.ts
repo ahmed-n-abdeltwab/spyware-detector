@@ -8,7 +8,7 @@ import { logger } from './utils/logger';
 dotenv.config();
 
 const app = express();
-const port = process.env.NODE_PORT || 3000;
+const port = process.env.BACK_PORT || 3000;
 
 app.use(cors());
 app.use(express.json());

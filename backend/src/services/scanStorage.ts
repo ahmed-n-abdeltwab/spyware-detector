@@ -26,11 +26,15 @@ export const saveScanResult = async (result: ScanResult): Promise<void> => {
 };
 
 export const getScanHistory = async (): Promise<ScanResult[]> => {
-  try {
-    const data = await fs.readFile(RESULTS_FILE, 'utf-8');
-    return JSON.parse(data);
-  } catch (error) {
-    logger.error('Error reading scan history:', error);
-    return [];
-  }
+    try {
+        const data = await fs.readFile(RESULTS_FILE, 'utf-8');
+        return JSON.parse(data) as ScanResult[];
+    } catch (error) {
+        logger.error('Error reading scan history:', error);
+        return [];
+    }
+};
+
+export const filterScanHistory = (scanResults: ScanResult[], fileId: number): ScanResult[] => {
+    return scanResults.filter(result => Number(result.fileId) === Number(fileId));
 };

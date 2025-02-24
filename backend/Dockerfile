@@ -15,11 +15,11 @@ COPY . .
 RUN npm run build
 
 # Set up environment variables
-ARG NODE_PORT
-ENV NODE_PORT=${NODE_PORT}
+ARG BACK_PORT
+ENV BACK_PORT=${BACK_PORT}
 
 # Expose the port from .env (default to 3000)
-EXPOSE ${NODE_PORT}
+EXPOSE ${BACK_PORT}
 
 # Run the application
 CMD ["node", "dist/server.js"]

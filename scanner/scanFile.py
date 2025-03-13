@@ -1,50 +1,67 @@
-import numpy as np
+import magic
+from pathlib import Path
+import hashlib
 import joblib
 import os
-from machine_learning.Classification import extract_features
+import numpy as np
+import io
+from machine_learning.Classification import extract_features, calculate_entropy, calculate_hash, get_file_type, get_mime_type, classify_file
+from dotenv import load_dotenv
 
-# Load the ML model
-MODEL_PATH = os.path.join('models', 'LOGISTIC_REGRESSION_MODEL.joblib')
+# Load environment variables
+load_dotenv()
 
 try:
-    model = joblib.load(MODEL_PATH)  # Use joblib to load the model
+    parent_dir = Path(__file__).parent
+    MODEL_PATH = os.path.join(parent_dir,  "models/")
+    logistic_model = joblib.load(os.path.join(MODEL_PATH, "LOGISTIC_REGRESSION_MODEL.joblib"))
+    support_model = joblib.load(os.path.join(MODEL_PATH, "SUPPORT.joblib"))
 except Exception as e:
-    raise RuntimeError(f"Error loading model from {MODEL_PATH}: {str(e)}")
-    
-def scan_file(file_bytes, file_name):
-    """
-    Scan a file using the ML model to detect malware
-    
-    Args:
-        file_bytes (bytes): Raw file content
-        file_name (str): Name of the file
-        
-    Returns:
-        dict: Scan results including prediction and confidence
-    """
-    try:
-        # Extract features from the file
-        features = extract_features(file_bytes)
-        
-        if features is None:
-            return {
-                'error': 'Could not extract features from file',
-                'isMalware': False,
-                'confidence': 0
-            }
+    raise RuntimeError(f"Error loading models: {str(e)}")
 
-        # Make prediction
-        features_array = np.array(features).reshape(1, -1)
-        prediction = model.predict(features_array)[0]
-        confidence = np.max(model.predict_proba(features_array)[0]) * 100
+
+def scan_file(file_stream, file_name):
+    try:
+        # Ensure we reset the file pointer before each read
+        file_stream.seek(0)
+        file_hash = calculate_hash(file_stream)
+
+        file_stream.seek(0)
+        file_type = get_file_type(file_stream)
+
+        file_stream.seek(0)
+        mime_type = get_mime_type(file_stream)
+
+        file_stream.seek(0)
+        entropy = calculate_entropy(file_stream.read())
+
+        file_stream.seek(0)
+        features = extract_features(file_stream)
+
+        # Ensure features were extracted successfully
+        if isinstance(features, dict) and "error" in features:
+            return features  # Return the extraction error
+
+        # Classify the file
+        prediction, confidence = classify_file(features, logistic_model, support_model)
+
+        # Ensure classification was successful
+        if isinstance(prediction, dict) and "error" in prediction:
+            return prediction  # Return classification error
 
         return {
-            'fileName': file_name,
-            'isMalware': bool(prediction),
-            'confidence': float(confidence),
-            'features': features
+            "status": "success",
+            "details": {
+                "fileName": file_name,
+                "isMalware": bool(prediction),
+                "confidence": float(confidence),
+            },
+            "hash": file_hash,
+            "fileType": file_type,
+            "mimeType": mime_type,
+            "entropy": entropy,
         }
 
     except Exception as e:
-        raise Exception(f'Error scanning file: {str(e)}')
-        
+        return {"error": f"Scan error: {str(e)}"}
+     

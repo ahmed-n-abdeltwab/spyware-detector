@@ -16,7 +16,8 @@ dist/
 .ipynb_checkpoints/
 
 # Logs and database files
-*.log
+logs/*
+!logs/.gitkeep
 *.sqlite3
 db.sqlite3
 instance/
@@ -46,5 +47,3 @@ config.py
 *.dockerignore
 docker-compose.override.yml
 
-# the datasets
-*.csv

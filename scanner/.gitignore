@@ -71,6 +71,8 @@ dist/
 Thumbs.db
 ehthumbs.db
 [Dd]esktop.ini
+# Docker
+docker-compose.override.yml
 
 # Editor files
 *.sublime-*

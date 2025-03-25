@@ -50,11 +50,12 @@ junit.xml
 
 # Security
 secrets/
-**/.env*       # This covers ALL .env files in ALL directories
+**/.env*      # This covers ALL .env files in ALL directories
 .env.local     # Explicit examples (optional)
 .env.production
 .env.development
 .env.test
+.env
 
 # UML & Documentation (Optional)
 docs/generated/

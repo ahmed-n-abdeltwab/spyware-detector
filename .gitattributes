@@ -1,0 +1,3 @@
+./         gitignore=.gitignore
+scanner/** gitignore=scanner/.gitignore
+backend/** gitignore=backend/.gitignore

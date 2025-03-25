@@ -1,12 +1,10 @@
 # Node.js & TypeScript (Backend)
 backend/node_modules/
 backend/dist/
-backend/.env
 backend/.DS_Store
 backend/package-lock.json
 backend/yarn.lock
 backend/.turbo/
-
 
 # Logs & Temp Files
 *.log
@@ -52,11 +50,11 @@ junit.xml
 
 # Security
 secrets/
-.env.local
+**/.env*       # This covers ALL .env files in ALL directories
+.env.local     # Explicit examples (optional)
 .env.production
 .env.development
 .env.test
-.env
 
 # UML & Documentation (Optional)
 docs/generated/

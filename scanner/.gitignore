@@ -1,49 +1,105 @@
-# Byte-compiled / optimized / DLL files
+# General
+.DS_Store
+*.swp
+*.bak
+~*
+.idea/
+.vscode/
+*.code-workspace
+
+# Python
 __pycache__/
 *.py[cod]
-*$py.class
-
-# Virtual environment
-venv/
+*.so
+.Python
 .env/
+venv/
+env/
+.venv/
+pip-log.txt
+.pytest_cache/
+.coverage
+htmlcov/
 
-# Distribution / packaging
-build/
+# Node.js (for frontend)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
 dist/
-*.egg-info/
+build/
+.next/
+out/
 
-# Jupyter Notebook checkpoints
-.ipynb_checkpoints/
+# Docker
+docker-compose.override.yml
+*.dockerignore
 
-# Logs and database files
-logs/*
+# Log files
+*.log
+logs/
 !logs/.gitkeep
-*.sqlite3
-db.sqlite3
-instance/
 
-# Machine learning artifacts
-*.h5
-*.hdf5
+# Model files
+models/
+!models/.gitkeep
 *.pkl
+*.h5
 *.joblib
 *.pb
 
-# Cache and temporary files
-.cache/
-*.bak
+# Database
+*.sqlite
+*.db
+*.sqlite3
 
-# Flask-specific files
-instance/
-config.py
+# Environment files
 .env
+.env.local
+.env.development
+.env.production
 
-# IDE files
-.vscode/
-.idea/
-*.iml
+# Build artifacts
+*.egg-info/
+build/
+dist/
+*.egg
+*.whl
 
-# Docker
-*.dockerignore
-docker-compose.override.yml
+# System files
+Thumbs.db
+ehthumbs.db
+[Dd]esktop.ini
 
+# Editor files
+*.sublime-*
+*.komodoproject
+*.kdev4
+
+# Testing
+.coverage
+test_results/
+.pytest_cache/
+
+# Frontend specific (adjust based on your framework)
+.cache/
+.temp/
+.svelte-kit/
+.astro/
+
+# Backend specific (Python)
+celerybeat-schedule
+celerybeat.pid
+
+# Machine learning
+*.npy
+*.npz
+*.csv
+*.parquet
+*.feather
+
+# IDE specific
+.ropeproject
+.mypy_cache/
+.pyre/

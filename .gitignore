@@ -7,20 +7,8 @@ backend/package-lock.json
 backend/yarn.lock
 backend/.turbo/
 
-# Python (ML Model)
-ml_model/__pycache__/
-ml_model/.venv/
-ml_model/env/
-ml_model/.env
-ml_model/.DS_Store
-ml_model/.pytest_cache/
-ml_model/venv/
-ml_model/models/
-ml_model/data/
-ml_model/logs/
 
 # Logs & Temp Files
-logs/
 *.log
 *.tmp
 *.swp
@@ -51,8 +39,6 @@ pnpm-lock.yaml
 
 # Docker
 docker-compose.override.yml
-backend/.dockerignore
-ml_model/.dockerignore
 
 # Coverage & Testing
 coverage/

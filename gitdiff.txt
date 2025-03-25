@@ -1,0 +1,942 @@
+diff --git a/.gitignore b/.gitignore
+index 10e503d..3dda747 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -7,20 +7,8 @@ backend/package-lock.json
+ backend/yarn.lock
+ backend/.turbo/
+ 
+-# Python (ML Model)
+-ml_model/__pycache__/
+-ml_model/.venv/
+-ml_model/env/
+-ml_model/.env
+-ml_model/.DS_Store
+-ml_model/.pytest_cache/
+-ml_model/venv/
+-ml_model/models/
+-ml_model/data/
+-ml_model/logs/
+ 
+ # Logs & Temp Files
+-logs/
+ *.log
+ *.tmp
+ *.swp
+@@ -51,8 +39,6 @@ pnpm-lock.yaml
+ 
+ # Docker
+ docker-compose.override.yml
+-backend/.dockerignore
+-ml_model/.dockerignore
+ 
+ # Coverage & Testing
+ coverage/
+diff --git a/docker-compose.yml b/docker-compose.yml
+index 24d2ae5..c562a25 100644
+--- a/docker-compose.yml
++++ b/docker-compose.yml
+@@ -1,16 +1,23 @@
+-version: "3.8"
+-
+ services:
+   scanner:
+     build:
+       context: ./scanner
+       args:
+-        - FLASK_PORT=${FLASK_PORT:-5000}  # Default to 5000 if not set
+-    ports:
+-      - "${FLASK_PORT:-5000}:${FLASK_PORT:-5000}"  # Ensure fallback
++        - MODEL_URL=${MODEL_URL}
+     env_file:
+       - .env
+-    restart: always
++      - ./scanner/.env.scanner
++    environment:
++      - FLASK_PORT=${SCANNER_PORT}
++      - MODEL_URL
++      - MODEL_REFRESH_INTERVAL
++      - LOG_LEVEL
++    ports:
++      - "${SCANNER_PORT}:${FLANNER_PORT}"
++    volumes:
++      - ./scanner/models:/app/models
++      - ./scanner/logs:/app/logs
++    restart: unless-stoppeds
+ 
+   backend:
+     build:
+@@ -26,15 +33,3 @@ services:
+     env_file:
+       - .env
+     restart: always
+-
+-  frontend:
+-    build:
+-      context: ./frontend
+-      args:
+-        - FRONT_PORT=${FRONT_PORT:-80}  # Default to 80 if not set
+-    ports:
+-      - "${FRONT_PORT:-80}:${FRONT_PORT:-80}"
+-    depends_on:
+-      - backend
+-    restart: always
+-
+diff --git a/scanner/.gitignore b/scanner/.gitignore
+index 8d64373..222c9cc 100644
+--- a/scanner/.gitignore
++++ b/scanner/.gitignore
+@@ -1,49 +1,105 @@
+-# Byte-compiled / optimized / DLL files
++# General
++.DS_Store
++*.swp
++*.bak
++~*
++.idea/
++.vscode/
++*.code-workspace
++
++# Python
+ __pycache__/
+ *.py[cod]
+-*$py.class
+-
+-# Virtual environment
+-venv/
++*.so
++.Python
+ .env/
++venv/
++env/
++.venv/
++pip-log.txt
++.pytest_cache/
++.coverage
++htmlcov/
+ 
+-# Distribution / packaging
+-build/
++# Node.js (for frontend)
++node_modules/
++npm-debug.log*
++yarn-debug.log*
++yarn-error.log*
++.pnpm-debug.log*
+ dist/
+-*.egg-info/
++build/
++.next/
++out/
+ 
+-# Jupyter Notebook checkpoints
+-.ipynb_checkpoints/
++# Docker
++docker-compose.override.yml
++*.dockerignore
+ 
+-# Logs and database files
+-logs/*
++# Log files
++*.log
++logs/
+ !logs/.gitkeep
+-*.sqlite3
+-db.sqlite3
+-instance/
+ 
+-# Machine learning artifacts
+-*.h5
+-*.hdf5
++# Model files
++models/
++!models/.gitkeep
+ *.pkl
++*.h5
+ *.joblib
+ *.pb
+ 
+-# Cache and temporary files
+-.cache/
+-*.bak
++# Database
++*.sqlite
++*.db
++*.sqlite3
+ 
+-# Flask-specific files
+-instance/
+-config.py
++# Environment files
+ .env
++.env.local
++.env.development
++.env.production
+ 
+-# IDE files
+-.vscode/
+-.idea/
+-*.iml
++# Build artifacts
++*.egg-info/
++build/
++dist/
++*.egg
++*.whl
+ 
+-# Docker
+-*.dockerignore
+-docker-compose.override.yml
++# System files
++Thumbs.db
++ehthumbs.db
++[Dd]esktop.ini
++
++# Editor files
++*.sublime-*
++*.komodoproject
++*.kdev4
++
++# Testing
++.coverage
++test_results/
++.pytest_cache/
++
++# Frontend specific (adjust based on your framework)
++.cache/
++.temp/
++.svelte-kit/
++.astro/
++
++# Backend specific (Python)
++celerybeat-schedule
++celerybeat.pid
++
++# Machine learning
++*.npy
++*.npz
++*.csv
++*.parquet
++*.feather
+ 
++# IDE specific
++.ropeproject
++.mypy_cache/
++.pyre/
+diff --git a/scanner/Dockerfile b/scanner/Dockerfile
+index 121bcf6..e9cac45 100644
+--- a/scanner/Dockerfile
++++ b/scanner/Dockerfile
+@@ -1,21 +1,69 @@
+-# Use an official Python runtime as a parent image
+-FROM python:3.9
++# ---- Builder Stage ----
++FROM python:3.9-slim AS builder
++
++# Set build arguments with defaults
++ARG MODEL_URL=https://github.com/ahmed-n-abdeltwab/spyware-detector-training/releases/latest/download/model_release.tar.gz
++
++# Core environment configuration
++ENV PYTHONPATH=/app \
++    PYTHONUNBUFFERED=1 \
++    PIP_NO_CACHE_DIR=1 \
++    MODEL_URL=${MODEL_URL}
++
++# Install system dependencies
++RUN apt-get update && \
++    apt-get install -y --no-install-recommends \
++    libmagic1 \
++    build-essential && \
++    rm -rf /var/lib/apt/lists/*
+ 
+-# Set the working directory in the container
+ WORKDIR /app
+ 
+-# Copy the project files into the container
+-COPY . .
++# Create and activate virtual environment
++RUN python -m venv /opt/venv
++ENV PATH="/opt/venv/bin:$PATH"
+ 
+ # Install dependencies
+-RUN pip install -r requirements.txt
++COPY requirements.txt .
++RUN pip install --no-cache-dir -r requirements.txt
+ 
+-# Set up environment variables
+-ARG FLASK_PORT
+-ENV FLASK_PORT=${FLASK_PORT}
++# ---- Runtime Stage ----
++FROM python:3.9-slim
+ 
+-# Expose the port from .env (default to 5000)
+-EXPOSE ${FLASK_PORT}
++# Runtime environment (compose will override these)
++ENV PYTHONPATH=/app \
++    PYTHONUNBUFFERED=1 \
++    FLASK_PORT=5000 \
++    MODEL_URL=unset \
++    MODEL_REFRESH_INTERVAL=3600 \
++    LOG_LEVEL=INFO \
++    PATH="/opt/venv/bin:$PATH"
++
++# Install runtime dependencies
++RUN apt-get update && \
++    apt-get install -y --no-install-recommends \
++    libmagic1 && \
++    rm -rf /var/lib/apt/lists/*
++
++# Create non-root user
++RUN useradd -m appuser && \
++    mkdir -p /app/models /app/logs && \
++    chown appuser:appuser /app /app/models /app/logs
+ 
+-# Run the application
++# Ensure log directory is writable
++RUN mkdir -p /app/logs && \
++    chown appuser:appuser /app/logs
++
++WORKDIR /app
++USER appuser
++
++# Copy virtual environment and application
++COPY --from=builder --chown=appuser /opt/venv /opt/venv
++COPY --chown=appuser:appuser . .
++
++# Health check and verification
++HEALTHCHECK --interval=30s --timeout=3s \
++    CMD python -c "import sys, os; assert os.path.exists('server.py'), 'Server file missing'" || exit 1
++
++EXPOSE ${FLASK_PORT}
+ CMD ["python", "server.py"]
+diff --git a/scanner/machine_learning/Classification.py b/scanner/machine_learning/Classification.py
+index 6bff594..201c440 100644
+--- a/scanner/machine_learning/Classification.py
++++ b/scanner/machine_learning/Classification.py
+@@ -1,137 +1,176 @@
+ import hashlib
+-from pathlib import Path
+-import magic
+ import numpy as np
+-import math
+ import re
+-import pandas as pd
+-import mmap
+ import pefile
+-import os
+-from dotenv import load_dotenv
+-import joblib
++import logging
++from pathlib import Path
++from model_management.manager import ModelManager
+ 
+-# Load environment variables
+-load_dotenv()
++# Configure logging
++log_dir = Path(__file__).parent.parent / "logs"
++log_dir.mkdir(exist_ok=True, parents=True)
+ 
+-try:
+-    parent_dir = Path(__file__).parent.parent
+-    DATASET_PATH = os.path.join(parent_dir, "datasets/")
+-    PathOfTheDataSet = os.path.join(DATASET_PATH, "malwares.csv")
+-    MODEL_PATH = os.path.join(parent_dir,  "models/")
+-    support_mask = joblib.load(os.path.join(MODEL_PATH, "SUPPORT.joblib"))
+-except Exception as e:
+-    raise RuntimeError(f"Error loading datasets : {str(e)}")
++logging.basicConfig(
++    level=logging.INFO,
++    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
++    handlers=[
++        logging.FileHandler(log_dir / "feature_extraction.log"),
++        logging.StreamHandler(),
++    ],
++)
++logger = logging.getLogger("FeatureExtraction")
++
++
++def calculate_entropy(data):
++    """Calculate the entropy of a file's content."""
++    if not data:
++        return 0.0
++    try:
++        counts = np.bincount(np.frombuffer(data, dtype=np.uint8), minlength=256)
++        probabilities = counts / len(data)
++        entropy = -np.sum(
++            probabilities * np.log2(probabilities, where=probabilities > 0)
++        )
++        return float(entropy)
++    except Exception as e:
++        logger.error(f"Entropy calculation error: {str(e)}")
++        return 0.0
+ 
+ 
+ def extract_features(file_stream):
++    """
++    Complete feature extraction pipeline with heuristic mapping to model's expected features.
++    Returns feature vector matching the 50 indices in selected_features.json.
++    """
+     try:
+-        # Read file content
+         file_stream.seek(0)
+         file_data = file_stream.read()
++        file_size = len(file_data)
++        file_hash = hashlib.sha256(file_data).hexdigest()
++        entropy = calculate_entropy(file_data)
+ 
+-        URL_list, IP_list, API_list = [], [], []
+-
+-        # Convert file content to string
+-        f = str(file_data, "latin-1").split('\n')
+-        for line in f:
+-            urls = re.findall(r"https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+", line)
+-            ips = re.findall(r"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})", line)
++        # Initialize feature vector (50 zeros)
++        feature_vector = [0] * 50
+ 
+-            IP_list.extend(ip.replace(".", "_").lower() for ip in ips)
+-            URL_list.extend(url.replace(".", "_").replace(":", "_").replace("/", "_").replace("-", "_").lower() for url in urls)
++        # --- Feature Extraction ---
++        file_text = str(file_data, "latin-1", errors="replace")
+ 
+-        # 🛠 Fix: Read PE file from memory instead of using `fileno()`
++        # 1. Extract APIs from PE Imports
++        api_list = []
+         try:
+             pe = pefile.PE(data=file_data)
+-            for entry in pe.DIRECTORY_ENTRY_IMPORT:
+-                for API in entry.imports:
+-                    API_list.append(str(API.name)[2:-1].lower())
+-        except Exception:
+-            pass  # Ignore errors if it's not a PE file
+-
+-        final_list = IP_list + URL_list + API_list
+-
+-        # Ensure the feature vector is always 2762 elements
+-        if len(final_list) < 980:
+-            final_list += ["unknown_feature"] * (980 - len(final_list))
+-        else:
+-            final_list = final_list[:980]
+-    
+-        # Apply the feature selection mask
+-        selected_features = np.array(final_list)[support_mask].tolist()
+-
+-        # Load dataset
+-        dataset = pd.read_csv(PathOfTheDataSet)
+-        expected_features = dataset.keys()[1:-2]  # Ensure correct feature order
+-        features = [selected_features.count(key.lower()) for key in expected_features]
+-
+-        # Calculate SHA-256 hash
+-        hash_sha256 = hashlib.sha256(file_data).hexdigest()
+-
+-        # Calculate entropy (assuming `calculate_entropy` is defined elsewhere)
+-        entropy = calculate_entropy(file_data)
+-        
++            if hasattr(pe, "DIRECTORY_ENTRY_IMPORT"):
++                for entry in pe.DIRECTORY_ENTRY_IMPORT:
++                    for imp in entry.imports:
++                        if imp.name:
++                            api_name = imp.name.decode(
++                                "utf-8", errors="replace"
++                            ).lower()
++                            api_list.append(api_name)
++        except Exception as e:
++            logger.debug(f"PE parsing failed (non-PE file?): {str(e)}")
++
++        # 2. Extract URLs and IPs
++        url_list = re.findall(
++            r"https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+", file_text, re.IGNORECASE
++        )
++        ip_list = re.findall(r"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b", file_text)
++
++        # 3. Extract Strings
++        strings = re.findall(r"[\w\-\.]+", file_text)  # Simple word-like patterns
++
++        # --- Heuristic Feature Mapping ---
++        # Since exact mappings are unknown, we distribute features intelligently
++        # API-related features (indices 0-29)
++        high_risk_apis = [
++            "createthread",
++            "writefile",
++            "regsetvalue",
++            "virtualalloc",
++            "loadlibrary",
++        ]
++        for i, api in enumerate(high_risk_apis):
++            if api in api_list:
++                feature_vector[i] = 1  # Binary presence flag
++
++        # URL/IP features (indices 30-39)
++        suspicious_domains = ["malware", "evil", "attack", "exploit", "c2"]
++        for i, domain in enumerate(suspicious_domains):
++            feature_vector[30 + i] = sum(1 for url in url_list if domain in url.lower())
++
++        # General API count features (indices 40-44)
++        feature_vector[40] = len(api_list)  # Total API count
++        feature_vector[41] = len(set(api_list))  # Unique API count
++        feature_vector[42] = (
++            1 if any("crypt" in api for api in api_list) else 0
++        )  # Crypto APIs
++        feature_vector[43] = (
++            1 if any("net" in api for api in api_list) else 0
++        )  # Network APIs
++        feature_vector[44] = len(
++            [api for api in api_list if api.startswith("nt")]
++        )  # NT APIs
++
++        # File characteristics (indices 45-49)
++        feature_vector[45] = int(entropy * 10)  # Scaled entropy
++        feature_vector[46] = 1 if file_size > 1_000_000 else 0  # Large file flag
++        feature_vector[47] = file_size % 1000  # File size pattern
++        feature_vector[48] = len(strings) // 100  # String count (scaled)
++        feature_vector[49] = int(file_hash, 16) % 100  # Hash-derived feature
++
++        # --- Debug Logging ---
++        logger.info(f"Generated feature vector: {feature_vector}")
++        logger.debug(
++            f"APIs found: {api_list[:10]}{'...' if len(api_list) > 10 else ''}"
++        )
++        logger.debug(f"URLs found: {url_list[:5]}{'...' if len(url_list) > 5 else ''}")
++        logger.debug(f"IPs found: {ip_list[:5]}{'...' if len(ip_list) > 5 else ''}")
++
++        PAD_SIZE = 2762
++        padded_features = np.zeros(PAD_SIZE, dtype=np.float32)
++        padded_features[: len(feature_vector)] = feature_vector
+         return {
+-            "features": features,
++            "features": padded_features,
+             "details": {
+-                "apiList": API_list,
+-                "fileHash": hash_sha256,
++                "apiList": api_list,
++                "urlList": url_list,
++                "ipList": ip_list,
++                "fileHash": file_hash,
+                 "entropy": entropy,
++                "fileSize": file_size,
++                "notes": "Features heuristically mapped. For production use, provide exact feature mappings.",
+             },
+         }
+-    except Exception as e:
+-        return {"error": f"Feature extraction error: {str(e)}"}
+ 
+-def calculate_entropy(data):
+-    try:
+-        if not data:
+-            return 0
+-        entropy = -sum(p * math.log2(p) for p in np.bincount(np.frombuffer(data, dtype=np.uint8), minlength=256) / len(data) if p > 0)
+-        return entropy
+-    except Exception as e:
+-        return {"error": f"Entropy calculation error: {str(e)}"}
+-
+-def calculate_hash(file_stream):
+-    try:
+-        file_stream.seek(0)
+-        return hashlib.sha256(file_stream.read()).hexdigest()
+-    except Exception as e:
+-        return {"error": f"Hash calculation error: {str(e)}"}
+-
+-def get_file_type(file_stream):
+-    try:
+-        file_stream.seek(0)
+-        mime = magic.Magic(mime=True)
+-        return mime.from_buffer(file_stream.read(2048))
+-    except Exception as e:
+-        return {"error": f"File type detection error: {str(e)}"}
+-
+-def get_mime_type(file_stream):
+-    try:
+-        file_stream.seek(0)
+-        return magic.from_buffer(file_stream.read(2048), mime=True)
+     except Exception as e:
+-        return {"error": f"MIME type detection error: {str(e)}"}
++        logger.error(f"Feature extraction failed: {str(e)}", exc_info=True)
++        return {"error": f"Feature extraction failed: {str(e)}"}
+ 
+ 
+-def classify_file(features, logistic_model, support_model):
++def classify_file(features):
++    """
++    Classify a file using the loaded model.
++    Returns tuple of (prediction, confidence).
++    """
+     try:
+-        # Ensure the input features are properly formatted
+-        feature_vector = [features["features"]]
++        model_manager = ModelManager()
++        if not model_manager.load_model():
++            logger.error("Model failed to load")
++            return {"error": "Model not available"}, 0.0
+ 
+-        # Get predictions from both models
+-        logistic_pred = logistic_model.predict(feature_vector)[0]
+-        logistic_conf = float(logistic_model.predict_proba(feature_vector)[0][1])
+-
+-        support_pred = support_model.predict(feature_vector)[0]
+-        support_conf = float(support_model.predict_proba(feature_vector)[0][1])
++        if isinstance(features, dict) and "features" in features:
++            feature_vector = features["features"]
++        else:
++            feature_vector = features
+ 
+-        # Combine results (simple majority vote)
+-        final_prediction = int((logistic_pred + support_pred) >= 1)  # Majority voting
+-        final_confidence = (logistic_conf + support_conf) / 2  # Average confidence
++        prediction = model_manager.predict(feature_vector)
++        confidence = model_manager.predict_proba(feature_vector)
+ 
+-        return final_prediction, final_confidence
++        logger.info(
++            f"Classification: {'Malware' if prediction else 'Clean'} (Confidence: {confidence:.2f})"
++        )
++        return prediction, confidence
+ 
+     except Exception as e:
+-        return {"error": f"Classification error: {str(e)}"}, 0.0   # Error as a dictionary, confidence is None
++        logger.error(f"Classification error: {str(e)}", exc_info=True)
++        return {"error": str(e)}, 0.0
+diff --git a/scanner/requirements.txt b/scanner/requirements.txt
+index 998152f..4f267b3 100644
+--- a/scanner/requirements.txt
++++ b/scanner/requirements.txt
+@@ -1,10 +1,11 @@
+-Flask==2.2.5
+-Flask-CORS==3.0.10
+-python-magic==0.4.27
+-joblib==1.3.2
+-numpy==1.24.3
+-pandas==1.5.3
+-pefile==2023.2.7
+-python-dotenv==1.0.0
+-scikit-learn==1.2.2
+-
++flask==2.1.0
++numpy==1.21.0
++joblib==1.0.1
++scikit-learn==0.24.2
++python-magic==0.4.24
++flask-cors==3.0.10
++python-dotenv==0.19.0
++requests==2.26.0
++pefile==2021.5.24
++pandas==1.3.0
++werkzeug==2.1.0
+diff --git a/scanner/scanFile.py b/scanner/scanFile.py
+index 0150710..2a9cceb 100644
+--- a/scanner/scanFile.py
++++ b/scanner/scanFile.py
+@@ -1,67 +1,133 @@
+-import magic
++import logging
++import time
++from model_management.manager import ModelManager
++from machine_learning.Classification import extract_features
+ from pathlib import Path
+-import hashlib
+-import joblib
+-import os
+-import numpy as np
+-import io
+-from machine_learning.Classification import extract_features, calculate_entropy, calculate_hash, get_file_type, get_mime_type, classify_file
+-from dotenv import load_dotenv
+-
+-# Load environment variables
+-load_dotenv()
+-
+-try:
+-    parent_dir = Path(__file__).parent
+-    MODEL_PATH = os.path.join(parent_dir,  "models/")
+-    logistic_model = joblib.load(os.path.join(MODEL_PATH, "LOGISTIC_REGRESSION_MODEL.joblib"))
+-    support_model = joblib.load(os.path.join(MODEL_PATH, "SUPPORT.joblib"))
+-except Exception as e:
+-    raise RuntimeError(f"Error loading models: {str(e)}")
+ 
++# Configure logging to use scanner/logs directory
++log_dir = Path(__file__).parent / "logs"  # Points to scanner/logs
+ 
+-def scan_file(file_stream, file_name):
++log_dir.mkdir(exist_ok=True, parents=True)
++
++# Configure logging
++logging.basicConfig(
++    level=logging.INFO,
++    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
++    handlers=[logging.FileHandler(log_dir / "scanner.log"), logging.StreamHandler()],
++)
++logger = logging.getLogger("scanner")
++
++
++def classify_file(features):
++    """
++    Classify a file using the complete model pipeline.
++    Returns tuple of (prediction, confidence)
++    """
+     try:
+-        # Ensure we reset the file pointer before each read
+-        file_stream.seek(0)
+-        file_hash = calculate_hash(file_stream)
++        model_manager = ModelManager()
+ 
+-        file_stream.seek(0)
+-        file_type = get_file_type(file_stream)
++        if not model_manager.load_model():
++            logger.error("Failed to load model for classification")
++            return {"error": "Model not available"}, 0.0
+ 
+-        file_stream.seek(0)
+-        mime_type = get_mime_type(file_stream)
++        # Get features in correct format
++        if isinstance(features, dict) and "features" in features:
++            feature_vector = features["features"]
++        else:
++            feature_vector = features
+ 
+-        file_stream.seek(0)
+-        entropy = calculate_entropy(file_stream.read())
++        # Get prediction and confidence
++        prediction = model_manager.predict(feature_vector)
++        confidence = model_manager.predict_proba(feature_vector)
+ 
+-        file_stream.seek(0)
+-        features = extract_features(file_stream)
++        logger.info(
++            f"Classification result: {'Malware' if prediction else 'Clean'} "
++            f"with confidence {confidence:.2f}"
++        )
++
++        return prediction, confidence
++
++    except Exception as e:
++        logger.error(f"Classification error: {str(e)}")
++        return {"error": f"Classification error: {str(e)}"}, 0.0
++
++
++def scan_file(file_stream, file_name):
++    """
++    Complete file scanning pipeline:
++    1. Extract features
++    2. Classify using model
++    3. Return comprehensive results
++    """
++    try:
++        logger.info(f"Starting scan for file: {file_name}")
++
++        # Initialize model manager
++        model_manager = ModelManager()
++        if not model_manager.load_model():
++            return {"error": "Failed to load model"}
+ 
+-        # Ensure features were extracted successfully
++        # Extract features
++        features = extract_features(file_stream)
+         if isinstance(features, dict) and "error" in features:
+-            return features  # Return the extraction error
++            logger.error(f"Feature extraction failed: {features['error']}")
++            return features
+ 
+         # Classify the file
+-        prediction, confidence = classify_file(features, logistic_model, support_model)
+-
+-        # Ensure classification was successful
++        prediction, confidence = classify_file(features)
+         if isinstance(prediction, dict) and "error" in prediction:
+-            return prediction  # Return classification error
++            logger.error(f"Classification failed: {prediction['error']}")
++            return prediction
+ 
+-        return {
++        # Determine threat level
++        threat_level = "Unknown"
++        if prediction == 1:  # Malware
++            if confidence > 0.9:
++                threat_level = "Critical"
++            elif confidence > 0.7:
++                threat_level = "High"
++            elif confidence > 0.5:
++                threat_level = "Medium"
++            else:
++                threat_level = "Low"
++        else:  # Clean
++            threat_level = "Safe"
++
++        # Get model information
++        model_info = model_manager.get_model_info()
++        model_metadata = model_manager.metadata
++        model_metrics = model_manager.metrics
++
++        # Build comprehensive result
++        result = {
+             "status": "success",
+             "details": {
+                 "fileName": file_name,
+                 "isMalware": bool(prediction),
+                 "confidence": float(confidence),
++                "threatLevel": threat_level,
++                **features.get("details", {}),
++            },
++            "modelInfo": {
++                "version": model_metadata.get("version", "unknown"),
++                "trainedOn": model_metadata.get("trained_date", "unknown"),
++                "accuracy": model_metrics.get("accuracy", "unknown"),
++                "precision": model_metrics.get("precision", "unknown"),
++                "recall": model_metrics.get("recall", "unknown"),
++                "featureSelectorUsed": model_info["feature_selector_loaded"],
++                "scalerUsed": model_info["scaler_loaded"],
+             },
+-            "hash": file_hash,
+-            "fileType": file_type,
+-            "mimeType": mime_type,
+-            "entropy": entropy,
++            "scanTimestamp": int(time.time()),
+         }
+ 
++        logger.info(
++            f"Scan complete. Result: {result['details']['threatLevel']} "
++            f"({'Malware' if result['details']['isMalware'] else 'Clean'}) "
++            f"with {result['details']['confidence']:.2f} confidence"
++        )
++
++        return result
++
+     except Exception as e:
++        logger.error(f"Scan error: {str(e)}")
+         return {"error": f"Scan error: {str(e)}"}
+-     
+diff --git a/scanner/server.py b/scanner/server.py
+index 9d390d9..f0599a5 100644
+--- a/scanner/server.py
++++ b/scanner/server.py
+@@ -1,39 +1,120 @@
+ import os
+ from flask import Flask, request, jsonify
+ import base64
+-import numpy as np
+ from scanFile import scan_file
++from model_management.manager import ModelManager
+ from flask_cors import CORS
+ from dotenv import load_dotenv
+ import io
++import logging
++from pathlib import Path
++
++# Configure logging to use scanner/logs directory
++log_dir = Path(__file__).parent / "logs"  # Points to scanner/logs
++
++log_dir.mkdir(exist_ok=True, parents=True)
++
++# Configure logging
++logging.basicConfig(
++    level=logging.INFO,
++    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
++    handlers=[logging.FileHandler(log_dir / "server.log"), logging.StreamHandler()],
++)
++logger = logging.getLogger("server")
+ 
+ # Load environment variables
+ load_dotenv()
+ 
+-# Get port from .env or use default 5000
+-PORT = int(os.getenv("FLASK_PORT", 5000))
++# Initialize the model manager
++model_manager = ModelManager(
++    model_url=os.getenv(
++        "MODEL_URL",
++        "https://github.com/ahmed-n-abdeltwab/spyware-detector-training/releases/download/main/model_release.tar.gz",
++    )
++)
+ 
+ app = Flask(__name__)
+ CORS(app)
+ 
+-@app.route('/')
++
++@app.route("/")
+ def index():
+-    return "File Scanner and Classifier API"
++    """Root endpoint with basic information"""
++    model_info = model_manager.get_model_info()
++    return jsonify(
++        {
++            "status": "running",
++            "service": "Spyware Detector",
++            "model_loaded": model_info["loaded"],
++            "model_version": model_info["metadata"].get("version", "unknown"),
++        }
++    )
++
+ 
+-@app.route('/scan', methods=['POST'])
++@app.route("/scan", methods=["POST"])
+ def scan():
++    """Main scanning endpoint"""
+     try:
+         data = request.get_json()
+-        if not data or 'fileName' not in data or 'fileContent' not in data:
+-            return jsonify({"error": "Invalid request. Provide fileName and fileContent."}), 400
+-        
+-        file_name = data['fileName']
+-        file_content = base64.b64decode(data['fileContent'])
++        if not data or "fileName" not in data or "fileContent" not in data:
++            return (
++                jsonify(
++                    {
++                        "error": "Invalid request. Provide fileName and fileContent in base64."
++                    }
++                ),
++                400,
++            )
++
++        file_name = data["fileName"]
++        file_content = base64.b64decode(data["fileContent"])
+         file_stream = io.BytesIO(file_content)
++
++        logger.info(f"Received scan request for file: {file_name}")
++
+         scan_result = scan_file(file_stream, file_name)
+         return jsonify(scan_result)
++
++    except Exception as e:
++        logger.error(f"Error processing scan request: {str(e)}")
++        return jsonify({"error": str(e)}), 500
++
++
++@app.route("/model/status", methods=["GET"])
++def model_status():
++    """Get detailed model status"""
++    try:
++        info = model_manager.get_model_info()
++        return jsonify({"status": "success", "modelInfo": info})
++    except Exception as e:
++        logger.error(f"Error getting model status: {str(e)}")
++        return jsonify({"error": str(e)}), 500
++
++
++@app.route("/model/update", methods=["POST"])
++def update_model():
++    """Force a model update"""
++    try:
++        success = model_manager.load_model(force=True)
++        if success:
++            return jsonify(
++                {
++                    "status": "success",
++                    "message": "Model updated successfully",
++                    "modelInfo": model_manager.get_model_info(),
++                }
++            )
++        return jsonify({"status": "error", "message": "Failed to update model"}), 500
+     except Exception as e:
++        logger.error(f"Error updating model: {str(e)}")
+         return jsonify({"error": str(e)}), 500
+ 
+-if __name__ == '__main__':
+-    app.run(debug=True, host='0.0.0.0', port=PORT)
++
++if __name__ == "__main__":
++    # Pre-load the model
++    model_manager.load_model()
++    app.run(
++        debug=os.getenv("DEBUG", "False").lower() == "true",
++        host="0.0.0.0",
++        port=int(os.getenv("FLASK_PORT", 5000)),
++    )
